@@ -1,0 +1,1889 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Capital Quest — Đế Chế Sợi Bông</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Industrial Manchester 1880 theme — dark iron, brass, soot */
+:root{
+  --felt:#1e1812; --panel:#2a221a; --panel-2:#362c22; --stage:#161210;
+  --ink:#f0e8d8; --ink-dim:#b8a890; --muted:#8a7e70;
+  --brass:#c8922a; --brass-soft:#3a2e1a;
+  --line:rgba(240,232,216,.12); --line-strong:rgba(240,232,216,.22);
+  --good:#4aad3a; --crit:#d04040;
+  --s1:#5a9ad6; --s2:#d47a3a;
+  --grid:#2e261e; --axis:#4a4038;
+  --spot:rgba(200,146,42,.12); --vig:rgba(0,0,0,.55);
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+  --display:'Archivo','Be Vietnam Pro',system-ui,sans-serif;
+  --body:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  --felt:#f0e8da; --panel:#faf6ee; --panel-2:#ede6d6; --stage:#e8e0d0;
+  --ink:#1a1410; --ink-dim:#5a5040; --muted:#8a7e70;
+  --brass:#9a6a10; --brass-soft:#f0e4c8;
+  --line:rgba(26,20,16,.14); --line-strong:rgba(26,20,16,.26);
+  --good:#1a8a1a; --crit:#c03030;
+  --s1:#2a70c0; --s2:#d06828;
+  --grid:#ddd6c8; --axis:#c0b8a8;
+  --spot:rgba(255,255,255,.7); --vig:rgba(26,20,16,.12);
+  --shadow:0 1px 2px rgba(26,20,16,.06),0 8px 24px rgba(26,20,16,.07);
+  color-scheme:light;
+}}
+:root[data-theme="light"]{
+  --felt:#f0e8da; --panel:#faf6ee; --panel-2:#ede6d6; --stage:#e8e0d0;
+  --ink:#1a1410; --ink-dim:#5a5040; --muted:#8a7e70;
+  --brass:#9a6a10; --brass-soft:#f0e4c8;
+  --line:rgba(26,20,16,.14); --line-strong:rgba(26,20,16,.26);
+  --good:#1a8a1a; --crit:#c03030;
+  --s1:#2a70c0; --s2:#d06828;
+  --grid:#ddd6c8; --axis:#c0b8a8;
+  --spot:rgba(255,255,255,.7); --vig:rgba(26,20,16,.12);
+  --shadow:0 1px 2px rgba(26,20,16,.06),0 8px 24px rgba(26,20,16,.07);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--felt);color:var(--ink);font-family:var(--body);
+  font-size:16px;line-height:1.6;-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:var(--display);font-weight:800;text-wrap:balance;margin:0;line-height:1.12;letter-spacing:-.015em}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2.5px solid var(--brass);outline-offset:3px;border-radius:3px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+.wrap{max-width:900px;margin:0 auto;padding-inline:18px;padding-block:24px 56px}
+.eyebrow{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.quiet{color:var(--ink-dim)}
+
+/* home */
+.hero{border:1.5px solid var(--line-strong);border-radius:4px;background:var(--panel);
+  box-shadow:var(--shadow);padding:28px 24px 24px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0 0 auto;height:4px;
+  background:repeating-linear-gradient(90deg,var(--brass) 0 16px,transparent 16px 26px)}
+.hero h1{font-size:clamp(34px,9vw,64px);letter-spacing:-.03em;margin-top:6px}
+.hero h1 em{font-style:normal;color:var(--brass)}
+.sub{color:var(--ink-dim);margin-top:11px;max-width:62ch}
+.src{font-size:13.5px;color:var(--muted);margin-top:14px;padding-top:13px;border-top:1px dashed var(--line-strong)}
+.castrow{display:flex;gap:14px;flex-wrap:wrap;margin-top:20px}
+.castcard{flex:1 1 180px;min-width:0;display:flex;gap:11px;align-items:center;
+  border:1.5px solid var(--line-strong);border-radius:4px;background:var(--panel);padding:11px 13px}
+.castcard svg{width:52px;height:62px;flex:none}
+.castcard b{display:block;font-family:var(--display);font-size:16px}
+.castcard span{font-size:13px;color:var(--ink-dim);line-height:1.42}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:14px;margin-top:20px}
+.mode{display:flex;flex-direction:column;gap:7px;align-items:flex-start;text-align:left;
+  background:var(--panel);border:1.5px solid var(--line-strong);border-radius:4px;padding:18px;
+  box-shadow:var(--shadow);transition:transform .14s ease,border-color .14s ease}
+.mode:hover{transform:translateY(-2px);border-color:var(--brass)}
+.mode b{font-family:var(--display);font-size:20px;font-weight:800}
+.mode span{font-size:14px;color:var(--ink-dim);line-height:1.5}
+.mode .tag{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--brass);background:var(--brass-soft);padding:2px 7px;border-radius:2px}
+.rules{margin-top:22px;background:var(--panel);border:1.5px solid var(--line-strong);border-radius:4px;padding:20px 22px}
+.rules h2{font-size:21px;margin-bottom:12px}
+.rules ul{margin:0;padding-left:0;list-style:none;display:grid;gap:9px}
+.rules li{display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:start;font-size:15px;color:var(--ink-dim)}
+.rules li b{color:var(--ink)}
+.chip{width:22px;height:22px;border-radius:50%;border:2.5px dashed var(--brass);flex:none;margin-top:2px}
+.chip.solid{border-style:solid;background:var(--brass-soft)}
+
+/* top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--felt);
+  border-bottom:1px solid var(--line);padding:8px 16px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.topbar .spacer{flex:1 1 auto;min-width:0}
+.btn{background:var(--panel);border:1.5px solid var(--line-strong);border-radius:3px;
+  padding:6px 12px;font-size:14px;font-weight:600;white-space:nowrap}
+.btn:hover{border-color:var(--brass)}
+.btn.primary{background:var(--brass);border-color:var(--brass);color:#fff;font-family:var(--display);font-weight:700}
+.btn.ghost{background:transparent}
+.btn.sm{padding:5px 9px;font-size:13px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.on{background:var(--brass-soft);border-color:var(--brass);color:var(--brass)}
+.rail{display:flex;gap:3px;align-items:center;min-width:0;overflow:hidden}
+.rail i{display:block;width:14px;height:7px;background:var(--line-strong);border-radius:1px;flex:none}
+.rail i.done{background:var(--brass)}
+.rail i.now{background:var(--ink);height:11px}
+.rail i.tut{background:transparent;border:1.5px solid var(--line-strong)}
+.rail i.tut.done{background:var(--brass);border-color:var(--brass)}
+.rail i.tut.now{background:var(--ink);border-color:var(--ink);height:11px}
+.rail .gap{width:9px;flex:none}
+
+/* the set */
+.set{position:relative;background:var(--stage);border:1.5px solid var(--line-strong);border-radius:5px;
+  overflow:hidden;box-shadow:var(--shadow)}
+.set::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:4;
+  background:radial-gradient(130% 95% at 50% 18%,transparent 40%,var(--vig) 100%)}
+.spotlight{position:absolute;left:50%;top:-14%;width:min(560px,105%);height:70%;transform:translateX(-50%);
+  background:radial-gradient(60% 60% at 50% 40%,var(--spot),transparent 72%);pointer-events:none;z-index:0}
+
+.slate{position:absolute;inset:0;z-index:6;display:grid;place-content:center;gap:4px;text-align:center;
+  pointer-events:none;background:var(--stage);animation:slateout .62s cubic-bezier(.7,0,.3,1) forwards}
+.slate .n{font-family:var(--display);font-weight:800;font-size:clamp(64px,19vw,140px);line-height:.84;
+  letter-spacing:-.05em;color:var(--brass)}
+.slate .t{font-family:var(--display);font-size:clamp(15px,3.4vw,24px);font-weight:700;padding-inline:20px;
+  text-wrap:balance;color:var(--ink)}
+.slate .e{font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+@keyframes slateout{0%,62%{opacity:1;clip-path:inset(0 0 0 0)}100%{opacity:0;clip-path:inset(0 0 100% 0);visibility:hidden}}
+
+.boards{position:relative;z-index:2;padding:16px 16px 4px;display:grid;gap:12px}
+.stageline{position:relative;z-index:3;display:flex;justify-content:center;align-items:flex-end;gap:clamp(2px,3vw,30px);
+  padding:0 12px;min-height:116px}
+.char{position:relative;width:clamp(74px,19vw,112px);flex:none;opacity:.4;filter:saturate(.55);
+  transition:opacity .3s ease,filter .3s ease,transform .3s ease;transform:translateY(5px)}
+.char svg{display:block;width:100%;height:auto}
+.char.in{animation:walkin .42s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes walkin{from{opacity:0;transform:translateY(26px) scale(.9)}}
+.char.speaking{opacity:1;filter:none;transform:translateY(0)}
+.char.speaking .mouth{animation:talk .2s steps(2,end) infinite}
+.char.speaking .body{animation:bob 1.15s ease-in-out infinite}
+@keyframes talk{0%{transform:scaleY(.35)}50%{transform:scaleY(1.3)}100%{transform:scaleY(.55)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.char .mouth,.char .eye,.char .body{transform-box:fill-box;transform-origin:center}
+.char .eye{animation:blink 6s infinite}
+.char:nth-child(2) .eye{animation-delay:1.7s}
+.char:nth-child(3) .eye{animation-delay:3.4s}
+@keyframes blink{0%,95.5%,100%{transform:scaleY(1)}97.5%{transform:scaleY(.08)}}
+.char .nm{position:absolute;left:50%;bottom:-3px;transform:translateX(-50%);font-family:var(--mono);
+  font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.char.speaking .nm{color:var(--brass)}
+
+/* dialogue */
+.dbox{position:relative;z-index:5;margin:10px 12px 12px;border:1.5px solid var(--line-strong);border-radius:4px;
+  background:var(--panel);box-shadow:var(--shadow);padding:14px 17px 15px;min-height:118px;
+  display:grid;gap:7px;align-content:start;cursor:pointer}
+.dbox:hover{border-color:var(--brass)}
+.who{font-family:var(--display);font-weight:800;font-size:12.5px;letter-spacing:.11em;text-transform:uppercase;
+  display:flex;align-items:center;gap:8px}
+.who i{width:9px;height:9px;border-radius:50%;flex:none}
+.dtext{font-size:clamp(15.5px,2.1vw,18.5px);line-height:1.62;min-width:0}
+.mcmode .dtext{font-size:clamp(17px,2.5vw,22px)}
+.dtext strong{font-weight:600}
+.dtext .ask{display:block;margin-top:9px;font-weight:600;color:var(--brass)}
+.caret{display:inline-block;width:9px;height:1.05em;background:currentColor;vertical-align:-2px;
+  margin-left:3px;animation:cb .8s steps(2) infinite;opacity:.6}
+@keyframes cb{50%{opacity:0}}
+.nextcue{position:absolute;right:13px;bottom:9px;font-family:var(--mono);font-size:11px;color:var(--muted);
+  display:flex;align-items:center;gap:5px;animation:nudge 1.3s ease-in-out infinite}
+@keyframes nudge{50%{transform:translateX(3px)}}
+
+/* dealt cards */
+.deal{animation:dealin .4s cubic-bezier(.2,.9,.3,1) both}
+@keyframes dealin{from{opacity:0;transform:translateY(16px) rotate(-1.2deg)}}
+
+.opts{display:grid;gap:10px}
+.opt{display:grid;grid-template-columns:auto 1fr;gap:13px;align-items:start;text-align:left;width:100%;
+  background:var(--panel);border:1.5px solid var(--line-strong);border-radius:4px;padding:13px 15px;
+  font-size:16px;line-height:1.48;transition:border-color .13s,background .13s,transform .13s}
+button.opt:hover{border-color:var(--brass);transform:translateX(3px)}
+.opt .k{font-family:var(--display);font-weight:800;font-size:16px;width:27px;height:27px;flex:none;
+  display:grid;place-items:center;border:2px solid var(--line-strong);border-radius:50%}
+.opt.right{border-color:var(--good);border-width:2.5px;background:color-mix(in srgb,var(--good) 9%,var(--panel))}
+.opt.right .k{border-color:var(--good);color:var(--good)}
+.opt.wrong{border-color:var(--crit);border-width:2.5px;background:color-mix(in srgb,var(--crit) 8%,var(--panel))}
+.opt.wrong .k{border-color:var(--crit);color:var(--crit)}
+.opt.dim{opacity:.48}
+.opt.flip{animation:flip .46s cubic-bezier(.4,0,.2,1) both}
+@keyframes flip{0%{transform:rotateX(88deg);opacity:0}100%{transform:rotateX(0);opacity:1}}
+.verdict{font-family:var(--display);font-weight:800;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+  display:inline-flex;gap:5px;margin-top:6px}
+.verdict.ok{color:var(--good)} .verdict.no{color:var(--crit)}
+
+.bet{display:grid;gap:12px;border:2px dashed var(--brass);border-radius:4px;padding:16px;
+  background:color-mix(in srgb,var(--brass) 5%,var(--panel))}
+.bet h3{font-family:var(--display);font-size:14.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass)}
+.timer{display:flex;align-items:center;gap:12px}
+.tnum{font-family:var(--display);font-weight:800;font-size:38px;font-variant-numeric:tabular-nums;min-width:58px}
+.tbar{flex:1;height:9px;background:var(--panel-2);border:1px solid var(--line-strong);border-radius:99px;overflow:hidden;min-width:0}
+.tbar i{display:block;height:100%;background:var(--brass);width:100%;transition:width 1s linear}
+.tnum.hot{color:var(--crit);animation:pulse .5s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.1)}}
+
+/* quote card */
+.srcq{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;border:1.5px solid var(--line-strong);
+  border-left:4px solid var(--brass);border-radius:4px;background:var(--panel-2);padding:14px 16px}
+.srcq svg{width:46px;height:52px;flex:none;opacity:.8}
+.srcq q{display:block;font-style:italic;font-size:15.5px;line-height:1.55;quotes:"«" "»"}
+.srcq cite{display:block;font-style:normal;font-size:12.5px;color:var(--muted);margin-top:6px}
+
+.lesson{border:2px solid var(--brass);border-radius:4px;background:var(--brass-soft);padding:17px 19px;display:grid;gap:9px}
+.lesson.stamp{animation:stamp .4s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes stamp{0%{transform:scale(1.28) rotate(-2.5deg);opacity:0}100%{transform:none;opacity:1}}
+.lesson .eyebrow{color:var(--brass)}
+.lesson b{font-family:var(--display);font-size:clamp(18px,3.1vw,23px);font-weight:800;line-height:1.2;display:block}
+.lesson p{font-size:15px;color:var(--ink)}
+
+.warnflag{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--crit);border:1.5px solid var(--crit);border-radius:2px;padding:1px 6px;margin-right:6px}
+@media (max-width:700px){.topbar .lbl{display:none}}
+
+.block{background:var(--panel);border:1.5px solid var(--line-strong);border-radius:4px;box-shadow:var(--shadow);
+  padding:26px 24px;display:grid;gap:14px}
+.block .bnum{font-family:var(--display);font-weight:800;font-size:clamp(50px,13vw,92px);line-height:.88;
+  letter-spacing:-.04em;color:var(--brass)}
+.block h2{font-size:clamp(25px,5.4vw,38px)}
+.keybox{border:1.5px dashed var(--line-strong);border-radius:4px;padding:15px 17px;display:grid;gap:8px;background:var(--panel-2)}
+.keybox .eyebrow{color:var(--s1)}
+.keybox b{color:var(--ink)}
+.keybox p{color:var(--ink-dim);font-size:15px}
+
+.sumtbl{width:100%;border-collapse:collapse;font-size:14.5px}
+.sumtbl th,.sumtbl td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.sumtbl th{font-family:var(--display);font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.sumtbl td:first-child{font-family:var(--mono);font-weight:600;color:var(--brass);white-space:nowrap;width:1%}
+
+.jump{display:grid;gap:5px;max-height:min(56vh,420px);overflow-y:auto;padding:3px}
+.jump button{display:grid;grid-template-columns:auto 1fr;gap:11px;text-align:left;width:100%;
+  background:transparent;border:1px solid var(--line);border-radius:3px;padding:8px 11px;font-size:14.5px}
+.jump button:hover{border-color:var(--brass);background:var(--panel-2)}
+.jump button .n{font-family:var(--mono);font-weight:600;color:var(--brass);font-size:13px}
+.jump .hd{font-family:var(--display);font-size:11.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);padding:10px 3px 2px}
+dialog{border:1.5px solid var(--line-strong);border-radius:4px;background:var(--panel);color:var(--ink);
+  box-shadow:var(--shadow);padding:0;max-width:540px;width:calc(100% - 32px)}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+.dlg{padding:20px 22px;display:grid;gap:12px}
+.dlg h2{font-size:21px}
+.kbd{font-family:var(--mono);font-size:12px;border:1px solid var(--line-strong);border-bottom-width:2.5px;
+  border-radius:3px;padding:1px 6px;background:var(--panel-2);white-space:nowrap}
+.khint{font-size:12.5px;color:var(--muted);display:flex;gap:13px;flex-wrap:wrap;align-items:center}
+.vnote{font-size:13px;color:var(--ink-dim);border:1.5px dashed var(--line-strong);border-radius:4px;
+  padding:9px 12px;background:var(--panel-2)}
+
+/* group ledger */
+.gpanel{margin-top:14px;border:1.5px solid var(--line-strong);border-left:4px solid var(--brass);border-radius:4px;
+  background:var(--panel);padding:14px 16px;display:grid;gap:11px}
+.gpanel .ghead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.gpanel .ghead h3{font-family:var(--display);font-size:16px}
+.gpanel .ghead .spacer{flex:1 1 auto}
+.gwrap{overflow-x:auto}
+.gtbl{width:100%;border-collapse:collapse;font-size:14.5px;min-width:430px}
+.gtbl th{font-family:var(--display);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+  text-align:left;padding:3px 8px 7px;font-weight:700;white-space:nowrap}
+.gtbl td{padding:5px 8px;border-top:1px solid var(--line);vertical-align:middle}
+.gtbl td.gname{font-weight:600;white-space:nowrap;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+.gtbl td.gp{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.gnum{width:76px;font:inherit;font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums;
+  padding:5px 7px;border-radius:3px;border:1.5px solid var(--line-strong);background:var(--panel-2);color:var(--ink);
+  text-align:right}
+.gnum:disabled{opacity:.55}
+.gpick{display:inline-flex;gap:4px}
+.gpick button{font-family:var(--display);font-weight:800;font-size:13px;width:32px;height:30px;border-radius:3px;
+  border:1.5px solid var(--line-strong);background:var(--panel-2);display:grid;place-items:center}
+.gpick button:hover:not(:disabled){border-color:var(--brass)}
+.gpick button[aria-pressed="true"]{background:var(--brass);border-color:var(--brass);color:#fff}
+.gpick button:disabled{opacity:.5}
+.gmini{font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding:4px 7px;
+  border-radius:3px;border:1.5px solid var(--crit);color:var(--crit);background:transparent;white-space:nowrap}
+.gmini:hover:not(:disabled){background:color-mix(in srgb,var(--crit) 12%,transparent)}
+.gmini:disabled{opacity:.45}
+.gdelta{font-family:var(--mono);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.gdelta.up{color:var(--good)} .gdelta.down{color:var(--crit)}
+.outflag{font-family:var(--display);font-size:10.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--crit);border:1.5px solid var(--crit);border-radius:2px;padding:2px 7px;white-space:nowrap}
+tr.isout{opacity:.52}
+tr.isout .gname{text-decoration:line-through}
+.gmsg{font-size:13.5px;color:var(--ink-dim)}
+.gmsg b{color:var(--ink)}
+.stand{display:grid;gap:5px}
+.stand div{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;font-size:14.5px;
+  padding:6px 9px;border:1px solid var(--line);border-radius:3px}
+.stand div:first-child{border-color:var(--brass);background:var(--brass-soft)}
+.stand .rk{font-family:var(--display);font-weight:800;color:var(--brass);font-size:13px;width:20px}
+.stand .vp{font-family:var(--mono);font-weight:600;font-variant-numeric:tabular-nums}
+.gform{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gform input[type=text]{flex:1 1 150px;min-width:0;font:inherit;font-size:15px;padding:7px 10px;border-radius:3px;
+  border:1.5px solid var(--line-strong);background:var(--panel-2);color:var(--ink)}
+.glist{display:grid;gap:7px}
+.glist .gr{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center}
+.glist .gr input{font:inherit;font-size:15px;padding:7px 10px;border-radius:3px;min-width:0;
+  border:1.5px solid var(--line-strong);background:var(--panel-2);color:var(--ink)}
+.xbtn{border:1.5px solid var(--line-strong);background:transparent;border-radius:3px;width:32px;height:32px;
+  display:grid;place-items:center;font-size:15px;color:var(--ink-dim)}
+.xbtn:hover{border-color:var(--crit);color:var(--crit)}
+.ldg{overflow-x:auto}
+.ldg table{border-collapse:collapse;font-size:13px;width:100%;min-width:400px}
+.ldg th,.ldg td{border:1px solid var(--line);padding:4px 7px;text-align:center;white-space:nowrap}
+.ldg th{font-family:var(--display);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.ldg td:first-child,.ldg th:first-child{text-align:left}
+.ldg td{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.ldg .pos{color:var(--good)} .ldg .neg{color:var(--crit)}
+pre.exp{white-space:pre-wrap;word-break:break-word;font-family:var(--mono);font-size:12px;background:var(--panel-2);
+  border:1px solid var(--line);border-radius:3px;padding:11px;max-height:190px;overflow:auto;margin:0}
+
+@media (max-width:560px){
+  .stageline{min-height:98px;gap:0}
+  .dbox{min-height:132px;margin-inline:9px}
+  .boards{padding:13px 11px 2px}
+}
+</style>
+<style>
+/* additions for the presenter-only version */
+.char.speaking .mouth{animation:none}
+.char .nm{white-space:normal;text-align:center;line-height:1.25;width:130%;bottom:-6px}
+.who .rl{font-family:var(--body);font-weight:600;font-size:12px;letter-spacing:.02em;text-transform:none;color:var(--muted)}
+.dtext{animation:fadein .25s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}}
+.tagline{display:inline-block;font-family:var(--mono);font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--crit);border:1.5px solid var(--crit);border-radius:2px;padding:2px 8px}
+.scene{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.scene h2{font-size:clamp(19px,3.4vw,26px)}
+.ask2{font-size:clamp(16px,2.2vw,19px);font-weight:600;line-height:1.5}
+.case{display:block;margin-top:8px;padding:9px 11px;border-radius:3px;background:var(--panel-2);
+  border-left:3px solid var(--line-strong);font-size:14.5px;line-height:1.5;color:var(--ink)}
+.opt.right .case{border-left-color:var(--good)}
+.opt.wrong .case{border-left-color:var(--crit)}
+.case .cw{font-family:var(--display);font-weight:800;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+.opt.wrong.soft{opacity:.86}
+.hintbox{border:1.5px dashed var(--s1);border-radius:4px;padding:11px 13px;background:color-mix(in srgb,var(--s1) 8%,var(--panel));font-size:15px}
+.hintbox b{color:var(--s1)}
+.decode{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.decode div{border:1.5px solid var(--line-strong);border-radius:4px;background:var(--panel);padding:12px;text-align:center}
+.decode b{display:block;font-family:var(--display);font-size:clamp(22px,4vw,32px);color:var(--brass)}
+.decode span{font-size:13px;color:var(--ink-dim)}
+.decode div:last-child{border-color:var(--brass);background:var(--brass-soft)}
+.npcgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-top:14px}
+.npc{display:flex;gap:10px;align-items:center;border:1.5px solid var(--line-strong);border-radius:4px;background:var(--panel);padding:9px 11px}
+.npc svg{width:44px;height:54px;flex:none}
+.npc b{display:block;font-family:var(--display);font-size:15px}
+.npc span{display:block;font-size:12.5px;color:var(--ink-dim);line-height:1.35}
+.npc i{font-style:normal;font-family:var(--mono);font-size:10.5px;color:var(--brass);letter-spacing:.06em}
+.npc .no{font-family:var(--display);font-weight:800;color:var(--muted);font-size:13px;width:18px;flex:none;text-align:right}
+.hbtn{font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding:5px 8px;border-radius:3px;
+  border:1.5px solid var(--line-strong);background:transparent;white-space:nowrap}
+.hbtn[aria-pressed="true"]{border-color:var(--s1);background:color-mix(in srgb,var(--s1) 18%,transparent);color:var(--ink)}
+.hbtn:disabled{opacity:.5}
+.scoreline{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:12px}
+.scoreline div{border:1.5px solid var(--line-strong);border-radius:4px;padding:11px 13px;background:var(--panel-2)}
+.scoreline b{display:block;font-family:var(--display);font-size:22px}
+.scoreline .p{color:var(--good)} .scoreline .m{color:var(--crit)}
+.scoreline span{font-size:13px;color:var(--ink-dim)}
+.castmini{display:flex;gap:10px;flex-wrap:wrap}
+.castmini .npc{flex:1 1 200px}
+.finale{border:2px solid var(--brass);border-radius:4px;padding:16px 18px;background:var(--panel-2);display:grid;gap:9px}
+
+/* ================= UI v3: bố cục 2 cột + họa tiết Manchester 1880 ================= */
+.btn{border-radius:8px}
+.btn.big{padding:9px 18px;font-size:15.5px}
+.topbar{background:color-mix(in srgb,var(--felt) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:8px 18px}
+.brand{font-family:var(--display);font-weight:800;font-size:15.5px;letter-spacing:-.01em;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.brand em{font-style:normal;color:var(--brass)}
+.brand svg{width:20px;height:20px;color:var(--brass);animation:spin 14s linear infinite}
+.pos{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.only-narrow{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes spinr{to{transform:rotate(-360deg)}}
+
+.layout{max-width:1480px;margin:0 auto;padding:18px 20px 44px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start}
+.main{min-width:0;display:grid;gap:14px;align-content:start}
+@media (max-width:1000px){.layout{grid-template-columns:minmax(0,1fr)}.side{position:static!important;max-height:none!important}.only-narrow{display:inline-flex}}
+@media (max-width:560px){.layout{padding:12px 12px 40px}.brand span.t{display:none}}
+
+/* ---- sidebar ---- */
+.side{position:sticky;top:62px;max-height:calc(100vh - 76px);overflow:auto;background:var(--panel);border:1.5px solid var(--line-strong);
+  border-radius:12px;box-shadow:var(--shadow);padding:14px;display:grid;gap:11px;align-content:start;
+  background-image:linear-gradient(180deg,color-mix(in srgb,var(--brass) 7%,transparent),transparent 90px)}
+.sh{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.sh h3{font-family:var(--display);font-size:22px;margin-top:1px}
+.sicons{display:flex;gap:6px}
+.ib{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--line-strong);background:var(--panel-2);display:grid;place-items:center;font-size:15px}
+.ib:hover{border-color:var(--brass);color:var(--brass)}
+.pill{display:inline-block;margin-top:5px;font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:99px;border:1px solid var(--line-strong);color:var(--ink-dim)}
+.pill.full{border-color:var(--good);color:var(--good)}
+.teams{display:grid;gap:8px}
+.team{border:1.5px solid var(--line);border-radius:9px;padding:8px 10px;background:var(--panel-2);display:grid;gap:7px;transition:border-color .25s,background .25s}
+.team.ok{border-color:color-mix(in srgb,var(--good) 75%,transparent);background:color-mix(in srgb,var(--good) 9%,var(--panel-2))}
+.team.no{border-color:color-mix(in srgb,var(--crit) 75%,transparent);background:color-mix(in srgb,var(--crit) 8%,var(--panel-2))}
+.tt{display:flex;justify-content:space-between;align-items:baseline;gap:8px;min-width:0}
+.tn{font-weight:700;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tc{font-family:var(--mono);font-weight:600;font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tc::after{content:" $";color:var(--muted);font-weight:500}
+.tp{display:flex;align-items:center;gap:6px}
+.seg{display:inline-flex;border:1.5px solid var(--line-strong);border-radius:7px;overflow:hidden;flex:none}
+.seg button{width:30px;height:28px;border:0;border-right:1px solid var(--line);background:transparent;font-family:var(--display);font-weight:800;font-size:13px;color:var(--ink)}
+.seg button:last-child{border-right:0}
+.seg button:hover:not(:disabled){background:var(--brass-soft)}
+.seg button[aria-pressed="true"]{background:var(--brass);color:#fff}
+.seg button:disabled{cursor:default}
+.seg button:disabled:not([aria-pressed="true"]){opacity:.4}
+.hb{width:30px;height:28px;border-radius:7px;border:1.5px dashed var(--line-strong);background:transparent;font-size:14px;opacity:.65}
+.hb[aria-pressed="true"]{border-style:solid;border-color:var(--s1);background:color-mix(in srgb,var(--s1) 22%,transparent);opacity:1}
+.hb:disabled{cursor:default}
+.td{margin-left:auto;font-family:var(--mono);font-weight:700;font-size:13.5px}
+.td.ok{color:var(--good)} .td.no{color:var(--crit)}
+.sfoot{display:grid;gap:8px;font-size:13px;color:var(--ink-dim);border-top:1px dashed var(--line-strong);padding-top:10px}
+.sfoot b{color:var(--ink)} .sfoot .btn{justify-self:start}
+.slegend{display:flex;flex-wrap:wrap;gap:3px 12px;font-size:12px;color:var(--muted)}
+.slegend .p{color:var(--good)} .slegend .m{color:var(--crit)}
+.rank{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.rank li{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:center;padding:8px 10px;border-radius:9px;background:var(--panel-2);border:1.5px solid var(--line)}
+.rank li.top{border-color:var(--brass);background:var(--brass-soft)}
+.rank .rk{font-family:var(--display);font-weight:800;color:var(--brass)}
+.rank .rn{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank .rv{font-family:var(--mono);font-weight:600}
+
+.vcfg-card{margin-top:14px;display:grid;gap:12px;background:var(--panel-2);border:1.5px solid var(--line-strong);border-radius:8px;padding:15px}
+.vcfg-tabs{display:inline-flex;border:1.5px solid var(--line-strong);border-radius:6px;overflow:hidden;flex-wrap:wrap}
+.vcfg-tabs button{padding:6px 14px;border:0;border-right:1px solid var(--line-strong);background:var(--panel);color:var(--ink-dim);font-family:var(--body);font-size:13px;font-weight:600;cursor:pointer;transition:background .14s,color .14s}
+.vcfg-tabs button:last-child{border-right:0}
+.vcfg-tabs button:hover{background:var(--brass-soft);color:var(--ink)}
+.vcfg-tabs button.on{background:var(--brass);color:#fff}
+.vcfg-field{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.vcfg-field select,.vcfg-field input{background:var(--panel);color:var(--ink);border:1.5px solid var(--line-strong);border-radius:4px;padding:6px 10px;font:inherit;font-size:13.5px}
+.vcfg-field select:focus-visible,.vcfg-field input:focus-visible{border-color:var(--brass);outline:none}
+
+/* ---- sân khấu ---- */
+.set{border-radius:14px;background:
+   radial-gradient(110% 70% at 50% 0%,color-mix(in srgb,var(--brass) 9%,var(--stage)),var(--stage) 62%)}
+.set::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:repeating-linear-gradient(0deg,transparent 0 27px,var(--line) 27px 28px),
+    repeating-linear-gradient(90deg,transparent 0 55px,var(--line) 55px 56px);
+  -webkit-mask-image:linear-gradient(to bottom,#000,transparent 55%);mask-image:linear-gradient(to bottom,#000,transparent 55%)}
+.boards{padding:18px 18px 4px;gap:13px}
+.opts.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:700px){.opts.g2{grid-template-columns:minmax(0,1fr)}}
+.opt{border-radius:10px;padding:12px 14px;position:relative;box-shadow:0 1px 0 var(--line)}
+.opt .k{border-radius:8px;width:30px;height:30px}
+.opt.deal .k{background:var(--brass);border-color:var(--brass);color:#fff}
+.opt.deal{background-image:linear-gradient(90deg,color-mix(in srgb,var(--brass) 6%,transparent),transparent 40%)}
+.dbox{border-radius:12px;border-left-width:5px;margin:10px 14px 14px}
+.bet{border-radius:12px;padding:12px 14px;gap:10px}
+.betrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.betrow .spacer{flex:1 1 auto}
+.lesson,.block,.finale,.hintbox,.case,.keybox{border-radius:10px}
+.block{border-radius:14px;position:relative;overflow:hidden}
+.navrow{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.navrow .khint{font-size:11.5px}
+.tagline{border-radius:5px;background:color-mix(in srgb,var(--crit) 10%,transparent);transform:rotate(-1.5deg);border-width:2px;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--crit) 30%,transparent)}
+.scene{align-items:center}
+.scene .ico{width:40px;height:40px;flex:none;color:var(--brass)}
+
+/* con dấu PHÊ DUYỆT / BÁC BỎ */
+.seal{position:absolute;top:10px;right:12px;font-family:var(--display);font-weight:800;font-size:11px;letter-spacing:.14em;
+  padding:3px 8px;border:2.5px double currentColor;text-transform:uppercase;border-radius:5px;transform:rotate(-8deg);opacity:.85;pointer-events:none;
+  animation:sealin .45s cubic-bezier(.3,1.6,.5,1) .25s both}
+.seal.ok{color:var(--good)} .seal.no{color:var(--crit)}
+@keyframes sealin{from{transform:scale(2.2) rotate(-14deg);opacity:0}}
+.opt .verdict{padding-right:90px}
+
+/* họa tiết */
+.deco{position:absolute;pointer-events:none;color:var(--brass)}
+.gearA{top:-34px;right:-30px;width:130px;opacity:.10;animation:spin 40s linear infinite;z-index:1}
+.gearB{top:52px;right:72px;width:62px;opacity:.10;animation:spinr 22s linear infinite;z-index:1}
+.gearC{bottom:-40px;left:-40px;width:140px;opacity:.07;animation:spin 50s linear infinite}
+.skyline{position:absolute;left:0;right:0;bottom:0;height:150px;z-index:0;pointer-events:none;color:var(--ink);opacity:.13}
+.stageline .skyline{left:-12px;right:-12px;height:120px;opacity:.15}
+.stageline .char{z-index:1}
+.skyline svg{width:100%;height:100%;display:block}
+.smoke{animation:smoke 9s ease-in infinite;transform-box:fill-box;transform-origin:center}
+.smoke.d2{animation-delay:3s}.smoke.d3{animation-delay:6s}
+@keyframes smoke{0%{opacity:0;transform:translate(0,10px) scale(.5)}20%{opacity:.9}100%{opacity:0;transform:translate(40px,-60px) scale(1.8)}}
+.win{fill:var(--brass);animation:flick 4s steps(2) infinite}
+.win.w2{animation-delay:1.3s}.win.w3{animation-delay:2.6s}
+@keyframes flick{50%{opacity:.45}}
+.lint{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.lint i{position:absolute;bottom:-10px;width:6px;height:6px;border-radius:50%;background:var(--ink);opacity:0;
+  box-shadow:0 0 6px var(--ink);animation:lint 14s linear infinite}
+@keyframes lint{0%{opacity:0;transform:translate(0,0)}10%{opacity:.18}100%{opacity:0;transform:translate(60px,-520px)}}
+.divider{display:flex;align-items:center;gap:10px;color:var(--brass);opacity:.7}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:repeating-linear-gradient(90deg,currentColor 0 6px,transparent 6px 10px)}
+.divider svg{width:22px;height:22px}
+
+/* trang hồi */
+.actart{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center}
+.actart .big{width:96px;height:96px;color:var(--brass);padding:14px;border:2px solid var(--brass);border-radius:18px;
+  background:var(--brass-soft)}
+.blockskyline{position:relative;height:120px;margin:-6px -24px -26px;overflow:hidden}
+.blockskyline .skyline{opacity:.16}
+.stagedir{font-style:italic;color:var(--ink-dim);border-left:3px solid var(--brass);padding:4px 0 4px 12px}
+/* trang chủ */
+.hero{border-radius:14px;padding-bottom:150px}
+.hero .skyline{height:140px;opacity:.16}
+.hero .gearA{opacity:.14}
+.rules,.mode,.npc,.castcard{border-radius:12px}
+.npc{background:var(--panel-2)}
+.wrap{max-width:1080px}
+</style>
+<style>
+/* ================= v4: tên + MSSV, AI đọc câu hỏi, điểm theo thời gian ================= */
+.mssv{display:inline-block;font-family:var(--mono);font-weight:600;font-size:11.5px;letter-spacing:.04em;
+  padding:1px 7px;border-radius:5px;border:1.5px solid currentColor;color:var(--brass);background:var(--brass-soft);white-space:nowrap;vertical-align:middle}
+.who{font-size:13.5px;flex-wrap:wrap;row-gap:4px}
+.who .spk{font-size:17px;letter-spacing:.06em}
+.who .mssv{font-size:12.5px;padding:2px 8px}
+.who .rl{font-size:13px}
+.char .nm{font-size:10.5px;letter-spacing:.06em;text-transform:none;font-weight:600}
+.char .nm .nid{font-size:9.5px;color:var(--brass);opacity:.9}
+.npc{align-items:flex-start}
+.npc .mssv{margin:3px 0 4px;display:inline-block!important;width:auto}
+.npc>div{display:grid;justify-items:start;align-content:start}
+.npc b{font-size:15.5px;line-height:1.25}
+.npc .no{padding-top:2px}
+.dbox.isai{background:linear-gradient(90deg,color-mix(in srgb,var(--brass) 12%,var(--panel)),var(--panel) 60%)}
+.aiwho{color:var(--brass)!important}
+.aibadge{font-family:var(--display);font-weight:800;font-size:12.5px;letter-spacing:.1em;padding:3px 9px;border-radius:99px;
+  background:var(--brass);color:#fff;animation:aipulse 1.6s ease-in-out infinite}
+@keyframes aipulse{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--brass) 22%,transparent)}}
+/* đồng hồ hai vòng */
+.bet.ph-p2{border-color:var(--s1);background:color-mix(in srgb,var(--s1) 6%,var(--panel))}
+.bet.ph-p2 h3{color:var(--s1)}
+.bet.ph-closed{border-style:solid;opacity:.9}
+.tbar.p2 i{background:var(--s1)}
+.tnum.p2{color:var(--s1)}
+.tnum.hot{color:var(--crit)!important}
+.timer .ib{flex:none}
+.pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.pills .pill{margin-top:0}
+.pill.clock{font-weight:700;color:var(--ink);border-color:var(--brass);background:var(--brass-soft)}
+.pill.clock.p2{border-color:var(--s1);background:color-mix(in srgb,var(--s1) 16%,transparent)}
+.pill.clock b.hot{color:var(--crit)}
+.tchip{font-family:var(--mono);font-size:11.5px;font-weight:600;padding:2px 6px;border-radius:6px;border:1px solid var(--line-strong);color:var(--ink-dim);white-space:nowrap}
+.tchip.ph2{border-color:var(--s1);color:var(--s1)}
+.tfix{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-dim)}
+.tfix input{width:52px;font:inherit;font-family:var(--mono);padding:3px 6px;border-radius:6px;border:1.5px solid var(--line-strong);background:var(--panel);color:var(--ink)}
+.hb{opacity:.75}
+/* trang chủ */
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin:4px 0 12px}
+.flow div{border:1.5px solid var(--line-strong);border-radius:10px;padding:10px 12px;background:var(--panel-2);display:grid;gap:3px}
+.flow b{font-family:var(--display);font-size:14.5px}
+.flow span{font-size:13px;color:var(--ink-dim)}
+.scoreline span+span{display:block;font-family:var(--mono);font-size:11px;margin-top:3px;color:var(--muted)}
+.npcgrid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+/* trao giải */
+.champ{display:flex;gap:16px;align-items:center;border:2.5px solid var(--brass);border-radius:14px;padding:14px 18px;
+  background:linear-gradient(120deg,var(--brass-soft),var(--panel) 70%);animation:stamp .6s cubic-bezier(.3,1.5,.5,1) both}
+.champ .crown svg{width:64px;height:64px;color:var(--brass);animation:bob 2s ease-in-out infinite}
+.champ b{display:block;font-family:var(--display);font-size:clamp(26px,4.4vw,40px);line-height:1.1}
+.champ span{font-family:var(--mono);font-weight:700;font-size:18px;color:var(--brass)}
+.rank.big li{padding:10px 14px;font-size:16px}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.three div{border:1.5px solid var(--line-strong);border-radius:12px;padding:14px;background:var(--panel-2);display:grid;gap:6px;align-content:start}
+.three .n{font-family:var(--display);font-weight:800;font-size:28px;color:var(--brass);line-height:1}
+.three b{font-family:var(--display);font-size:18px}
+.three p{font-size:14.5px;color:var(--ink-dim)}
+.theend{text-align:center;justify-items:center}
+.theend h1{font-family:var(--display);font-size:clamp(60px,13vw,130px);letter-spacing:-.04em;line-height:.9;color:var(--brass)}
+.theend h2{font-size:clamp(22px,4vw,34px)}
+.credits{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;width:100%;margin-top:6px;text-align:left}
+.credits div{border:1px solid var(--line);border-radius:10px;padding:9px 12px;background:var(--panel-2);display:grid;gap:2px;align-content:start}
+.credits b{font-size:15px}
+.credits span:last-child{font-size:12.5px;color:var(--ink-dim)}
+.credits .mssv{justify-self:start}
+.presenters{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid var(--line-strong);
+  border-radius:12px;background:var(--panel);box-shadow:var(--shadow)}
+.plabel{font-family:var(--display);font-weight:800;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.pchip{display:inline-flex;align-items:center;gap:9px;padding:4px 12px 4px 6px;border-radius:99px;border:1.5px solid var(--line-strong);
+  background:var(--panel-2);opacity:.62;transition:opacity .2s,border-color .2s}
+.pchip svg{width:30px;height:36px;flex:none}
+.pchip b{font-family:var(--display);font-size:17px;white-space:nowrap}
+.pchip .mssv{font-size:13px;padding:2px 8px}
+.pchip.on{opacity:1;border-color:var(--brass);background:var(--brass-soft);box-shadow:0 0 0 3px color-mix(in srgb,var(--brass) 22%,transparent)}
+.stageline{gap:clamp(10px,2.4vw,34px);align-items:flex-end}
+.stageline .char{width:clamp(118px,14vw,160px);display:flex;flex-direction:column;align-items:center;opacity:.55}
+.stageline .char.speaking{opacity:1}
+.stageline .char svg{width:clamp(72px,8.5vw,104px)}
+.stageline .char .nm{position:static;transform:none;width:100%;margin:5px 0 8px;padding:3px 6px;border-radius:6px;
+  text-align:center;white-space:normal;font-family:var(--display);font-size:11px;line-height:1.25;letter-spacing:.06em;
+  text-transform:uppercase;font-weight:800;color:var(--ink-dim);background:color-mix(in srgb,var(--panel) 85%,transparent);
+  border:1px solid var(--line)}
+.stageline .char.speaking .nm{color:var(--brass);border-color:var(--brass)}
+.dbox.merged{gap:10px;padding-bottom:28px}
+.mcmode .dbox.merged .dtext{font-size:clamp(16px,1.75vw,19.5px);line-height:1.58}
+.dbox.merged .dtext p+p{margin-top:7px}
+.dbox.merged .dseg{display:block}
+.dbox.merged .dseg+.dseg{border-top:1px dashed var(--line-strong);padding-top:10px}
+.dbox.merged .who{margin-bottom:4px}
+.steps{display:flex;flex-wrap:wrap;gap:6px}
+.steps span{font-family:var(--display);font-weight:800;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
+  padding:4px 10px;border-radius:99px;border:1.5px solid var(--line-strong);color:var(--muted)}
+.steps span.done{color:var(--ink-dim);border-color:var(--line)}
+.steps span.on{color:#fff;background:var(--brass);border-color:var(--brass)}
+.know{border:2px solid var(--brass);border-radius:14px;background:var(--panel);padding:18px 22px;display:grid;gap:10px;
+  background-image:linear-gradient(135deg,color-mix(in srgb,var(--brass) 8%,transparent),transparent 45%);animation:dealin .45s ease both}
+.know .eyebrow{color:var(--brass)}
+.kbody{font-size:clamp(17px,1.95vw,22px);line-height:1.62}
+.kbody p{margin-top:12px}
+.kbody b{color:var(--brass)}
+.ansbar{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;border:2.5px solid var(--good);border-radius:12px;padding:10px 16px;
+  background:color-mix(in srgb,var(--good) 10%,var(--panel));animation:stamp .5s cubic-bezier(.3,1.5,.5,1) both}
+.ansbar .eyebrow{color:var(--good)}
+.ansbar b{font-family:var(--display);font-size:clamp(20px,2.6vw,28px);color:var(--good)}
+.sdir{font-style:italic;color:var(--ink-dim);font-size:14.5px}
+.still .know,.still .ansbar{animation:none!important}
+.ratepick button{width:46px}
+.still .deal,.still .dtext,.still .flip,.still .seal,.still .stamp,.still .champ{animation:none!important}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<dialog id="dlg"><div class="dlg" id="dlgBody"></div></dialog>
+<script>
+"use strict";
+/* ========================= 10 THÀNH VIÊN — theo Kịch bản phân vai chính thức ========================= */
+const CAST={
+  giang:{no:"01",id:"HS194252",name:"Lâm Thị Quỳnh Giang",call:"Quỳnh Giang",role:"Chủ ngân hàng đầu tư",sub:"Mở game · trao giải",seg:"Mở game · Hồi 1 · Trao giải",col:"var(--s1)",
+         look:{skin:"#cf9a6d",hair:"flow",hc:"#2a1d1a",cloth:"#1d3050",neck:"suit",accent:"#dce6ef",acc:["glasses"],mouth:"line"}},
+  chau :{no:"02",id:"HS186348",name:"Lê Minh Châu",call:"Minh Châu",role:"Giám đốc tuyển dụng",sub:"Vai phụ Hồi 3",seg:"Hồi 2 · Vai phụ Hồi 3",col:"var(--s2)",
+         look:{skin:"#e0ab7c",hair:"messy",hc:"#1b1410",cloth:"#8a2e1a",neck:"round",accent:"#e8d9c0",acc:["blush"],mouth:"open"}},
+  duc  :{no:"03",id:"HS190714",name:"Dương Minh Đức",call:"Minh Đức",role:"Quản đốc phân xưởng",seg:"Hồi 3",col:"#c07a3a",
+         look:{skin:"#c98f5f",hair:"short",hc:"#1b1410",cloth:"#4a3a2a",neck:"round",accent:"#d8c8a8",acc:["goggles","mustache"],mouth:"open"}},
+  klinh:{no:"04",id:"HS189008",name:"Trần Lê Khánh Linh",call:"Khánh Linh",role:"Chuyên gia tài chính",seg:"Hồi 4 · QĐ 07",col:"#3aa08a",
+         look:{skin:"#d9a271",hair:"bun",hc:"#241a14",cloth:"#24463e",neck:"suit",accent:"#f2efe4",acc:["glasses"],mouth:"smile"}},
+  mlinh:{no:"05",id:"HS190387",name:"Mai Ngọc Linh",call:"Ngọc Linh",role:"Giám đốc tiền lương",seg:"Hồi 4 · QĐ 08",col:"#c0507a",
+         look:{skin:"#e2b089",hair:"flow",hc:"#3a2418",cloth:"#5a2a44",neck:"round",accent:"#f0dce4",acc:["bow"],mouth:"smile"}},
+  duong:{no:"06",id:"HS190431",name:"Dương Tùng Dương",call:"Tùng Dương",role:"Giám đốc chuỗi cung ứng",seg:"Hồi 5",col:"#d0a030",
+         look:{skin:"#c98f5f",hair:"short",hc:"#1b1410",cloth:"#3e4a2a",neck:"suit",accent:"#e8d9c0",acc:["cap"],mouth:"open"}},
+  vy   :{no:"07",id:"HE190921",name:"Nguyễn Hà Vy",call:"Hà Vy",role:"Thanh tra kinh tế",seg:"Hồi 6",col:"#8a6fd0",
+         look:{skin:"#e0ab7c",hair:"bun",hc:"#120d0a",cloth:"#22202c",neck:"suit",accent:"#d8d4e8",acc:[],mouth:"line"}},
+  tu   :{no:"08",id:"HS194069",name:"Trần Anh Tú",call:"Anh Tú",role:"Chuyên gia chiến lược 1",sub:"Tổng kết cuối",seg:"Hồi 7 · QĐ 13 · Tổng kết cuối",col:"#d06a4a",
+         look:{skin:"#d9a271",hair:"short",hc:"#241a14",cloth:"#2a1e14",neck:"suit",accent:"#f2efe4",acc:["bow"],mouth:"smile"}},
+  dat  :{no:"09",id:"HS190184",name:"Hoàng Văn Đạt",call:"Văn Đạt",role:"Chuyên gia chiến lược 2",seg:"Hồi 7 · QĐ 14",col:"#4a8ad0",
+         look:{skin:"#cf9a6d",hair:"messy",hc:"#1b1410",cloth:"#1d3050",neck:"suit",accent:"#dce6ef",acc:["glasses"],mouth:"line"}},
+  hoa  :{no:"10",id:"HS190693",name:"Phạm Phương Hoa",call:"Phương Hoa",role:"Chuyên gia công nghệ",seg:"Hồi 7 · QĐ 15",col:"#5aa040",
+         look:{skin:"#dca47a",hair:"flow",hc:"#2a1a12",cloth:"#2e4a22",neck:"round",accent:"#e4ecd8",acc:["hat"],mouth:"smile"}}
+};
+const ORDER=Object.keys(CAST);
+
+function portrait(k){
+  const L=CAST[k].look, ink="rgba(10,16,14,.42)";
+  let back="",front="",cloth="",acc="",mouth="";
+  if(L.hair==="short") front=`<path d="M29 38c0-15 9-22 21-22s21 7 21 22c-4-8-11-11-21-11s-17 3-21 11z" fill="${L.hc}"/>`;
+  if(L.hair==="messy") front=`<path d="M28 40c-1-17 10-25 22-25s23 8 22 25c-3-6-6-9-9-7-3-6-9-4-13-7-3 5-8 4-11 7-3-2-8 1-11 7z" fill="${L.hc}"/>`;
+  if(L.hair==="flow"){ back=`<path d="M25 46c0-20 11-29 25-29s25 9 25 29v26c-7 3-43 3-50 0z" fill="${L.hc}"/>`;
+    front=`<path d="M29 37c2-12 10-19 21-19s19 7 21 19c-6-5-13-8-21-8s-15 3-21 8z" fill="${L.hc}"/>`; }
+  if(L.hair==="bun") front=`<circle cx="50" cy="16" r="8" fill="${L.hc}"/><path d="M29 40c0-15 9-23 21-23s21 8 21 23c-4-8-11-12-21-12s-17 4-21 12z" fill="${L.hc}"/>`;
+  cloth = L.neck==="suit"
+    ? `<path class="body" d="M21 118V93c0-11 11-19 29-19s29 8 29 19v25z" fill="${L.cloth}"/><path d="M50 74l-11 12 4 32h14l4-32-11-12z" fill="${L.accent}"/>`
+    : `<path class="body" d="M20 118V94c0-12 12-20 30-20s30 8 30 20v24z" fill="${L.cloth}"/><path d="M38 75c4 9 20 9 24 0l-5-2c-3 6-11 6-14 0z" fill="${L.accent}"/><path d="M50 78v40" stroke="${ink}" stroke-width="1.4"/>`;
+  mouth = L.mouth==="smile" ? `<path class="mouth" d="M43 53q7 5 14 0" stroke="#7e3f32" stroke-width="2.4" fill="none" stroke-linecap="round"/>`
+        : L.mouth==="open" ? `<ellipse class="mouth" cx="50" cy="54" rx="4.2" ry="3.2" fill="#7e3f32"/>`
+        : `<path class="mouth" d="M44 54h12" stroke="#7e3f32" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+  (L.acc||[]).forEach(a=>{
+    if(a==="glasses") acc+=`<g fill="none" stroke="#2b2b28" stroke-width="1.7" opacity=".85"><circle cx="42" cy="40" r="7"/><circle cx="58" cy="40" r="7"/><path d="M49 40h2M35 39l-5-2M65 39l5-2"/></g>`;
+    if(a==="blush") acc+=`<circle cx="63" cy="45" r="3.4" fill="#e08a6a" opacity=".5"/><circle cx="37" cy="45" r="3.4" fill="#e08a6a" opacity=".5"/>`;
+    if(a==="bow") acc+=`<path d="M41 79l9 4 9-4v8l-9-4-9 4z" fill="#c8922a"/>`;
+    if(a==="cap") acc+=`<path d="M27 30c0-10 10-16 23-16s23 6 23 16c-9-3-37-3-46 0z" fill="#5a4a3a"/><path d="M60 28c9 0 15 2 17 5-7 0-13-1-17-2z" fill="#3e3226"/>`;
+    if(a==="hat") acc+=`<rect x="35" y="2" width="30" height="17" rx="2" fill="#1a1410"/><rect x="35" y="14" width="30" height="3" fill="#c8922a"/><rect x="25" y="18" width="50" height="4" rx="2" fill="#1a1410"/>`;
+    if(a==="mustache") acc+=`<path d="M41 50c3-3 6-3 9-1 3-2 6-2 9 1-3 2-6 2-9 0-3 2-6 2-9 0z" fill="${L.hc}"/>`;
+    if(a==="goggles") acc+=`<rect x="29" y="23" width="42" height="5" rx="2" fill="#3a2a1a"/><circle cx="41" cy="25.5" r="5.2" fill="#c8922a" stroke="#3a2a1a" stroke-width="2"/><circle cx="59" cy="25.5" r="5.2" fill="#c8922a" stroke="#3a2a1a" stroke-width="2"/>`;
+  });
+  return `<svg viewBox="0 0 100 122" aria-hidden="true">${back}${cloth}
+    <ellipse cx="50" cy="42" rx="21" ry="24" fill="${L.skin}"/>${front}
+    <ellipse class="eye" cx="42" cy="40" rx="2.6" ry="3.2" fill="#1b1410"/><ellipse class="eye" cx="58" cy="40" rx="2.6" ry="3.2" fill="#1b1410"/>
+    ${mouth}${acc}</svg>`;
+}
+
+/* ========================= HỌA TIẾT ========================= */
+function gearSVG(cls,teeth){
+  const n=teeth||12, R=50, r=41, pts=[];
+  for(let i=0;i<n*4;i++){ const a=(i/(n*4))*Math.PI*2, rad=(i%4<2)?R:r; pts.push((60+rad*Math.cos(a)).toFixed(1)+","+(60+rad*Math.sin(a)).toFixed(1)); }
+  return `<svg class="${cls||""}" viewBox="0 0 120 120" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd"
+    d="M${pts.join("L")}Z M60 44a16 16 0 1 0 .01 0Z"/><circle cx="60" cy="60" r="27" fill="none" stroke="currentColor" stroke-width="4" opacity=".0"/></svg>`;
+}
+function skylineSVG(){
+  /* nhà máy dệt mái răng cưa, ống khói và khói */
+  const saw=(x,w,y,n)=>{ let d=`M${x} 160V${y}`; const s=w/n; for(let i=0;i<n;i++){ d+=`L${x+i*s+s*.7} ${y-22}L${x+i*s+s*.7} ${y}L${x+(i+1)*s} ${y}`; } return d+`V160Z`; };
+  const chim=(x,h,w)=>`<rect x="${x}" y="${160-h}" width="${w}" height="${h}"/><rect x="${x-3}" y="${160-h}" width="${w+6}" height="6"/>`;
+  const puff=(x,y,c)=>`<g class="smoke ${c}" opacity=".9"><circle cx="${x}" cy="${y}" r="9"/><circle cx="${x+10}" cy="${y-6}" r="11"/><circle cx="${x+22}" cy="${y-2}" r="8"/></g>`;
+  const wins=(x0,y,cnt,gap,cls)=>Array.from({length:cnt},(_,i)=>`<rect class="win ${i%3===0?"w2":i%3===1?"w3":""}" x="${x0+i*gap}" y="${y}" width="7" height="10" rx="1"/>`).join("");
+  return `<div class="skyline"><svg viewBox="0 0 1200 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><g fill="currentColor">
+    ${puff(118,40,"")}${puff(468,22,"d2")}${puff(828,34,"d3")}${puff(1050,48,"")}
+    ${chim(110,130,18)}${chim(460,150,20)}${chim(820,138,18)}${chim(1044,120,16)}
+    <path d="${saw(0,260,112,5)}"/><path d="${saw(240,200,96,4)}"/><path d="${saw(430,300,118,6)}"/>
+    <path d="${saw(720,220,100,4)}"/><path d="${saw(930,270,116,5)}"/>
+    <rect x="610" y="70" width="70" height="90"/><path d="M604 72l41-26 41 26z"/><circle cx="645" cy="92" r="11" fill="var(--stage)"/>
+    <path d="M645 92v-7M645 92h5" stroke="currentColor" stroke-width="2"/></g>
+    <g>${wins(20,128,10,24)}${wins(452,132,12,23)}${wins(950,130,10,25)}</g></svg></div>`;
+}
+function lint(){ return `<div class="lint">${[6,18,31,44,57,69,82,93].map((x,i)=>`<i style="left:${x}%;animation-delay:${(i*1.7).toFixed(1)}s;animation-duration:${12+i%4*2}s"></i>`).join("")}</div>`; }
+const ICON={
+  bank:`<path d="M6 18L24 7l18 11M8 20h32M11 22v14M19 22v14M29 22v14M37 22v14M7 38h34M5 42h38"/>`,
+  hire:`<rect x="10" y="8" width="28" height="34" rx="2"/><path d="M18 8V5h12v3"/><circle cx="24" cy="20" r="5"/><path d="M15 33c2-5 5-7 9-7s7 2 9 7"/>`,
+  clock:`<circle cx="24" cy="24" r="17"/><path d="M24 13v11l7 5"/><path d="M24 4v3M24 41v3M4 24h3M41 24h3"/>`,
+  ledger:`<path d="M24 12c-5-4-12-4-18-2v28c6-2 13-2 18 2 5-4 12-4 18-2V10c-6-2-13-2-18 2zM24 12v28"/><path d="M10 17h9M10 22h9M29 17h9M29 22h9"/>`,
+  cycle:`<path d="M38 18A15 15 0 0 0 11 15M10 30a15 15 0 0 0 27 3"/><path d="M38 9v9h-9M10 39v-9h9"/>`,
+  audit:`<circle cx="20" cy="20" r="11"/><path d="M28 28l12 12"/><path d="M15 20h10M20 15v10"/>`,
+  crown:`<path d="M6 36l3-20 9 9 6-13 6 13 9-9 3 20z"/><path d="M6 41h36"/>`,
+  cotton:`<circle cx="24" cy="18" r="7"/><circle cx="16" cy="25" r="7"/><circle cx="32" cy="25" r="7"/><circle cx="24" cy="29" r="6"/><path d="M24 35v9M18 40l6-3 6 3"/>`
+};
+const ACTICON=["bank","hire","clock","ledger","cycle","audit","crown"];
+const icon=(k,cls)=>`<svg class="${cls||"ico"}" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
+const divider=()=>`<div class="divider">${icon("cotton","")}</div>`;
+
+
+
+/* ========================= ÂM THANH: hiệu ứng · nhạc hoan hô · AI đọc câu hỏi ========================= */
+const RATES=[1,1.2,1.4,1.6,1.8];
+const AU={
+  rate:1.4,
+  pitch:0.85,
+  engine:"browser",
+  apiKey:"",
+  voiceId:"pNInz6obpgDQGcFmaJgB",
+  voiceUri:"",
+  audioCache:{},
+  _audio:null,
+  ctx:null, sfx:true, voice:true, noiseBuf:null, vi:null, gen:0, _u:null, speaking:false, bus:null,
+  boot(){ if(this.ctx) return;
+    try{ const C=window.AudioContext||window.webkitAudioContext; if(!C) return; this.ctx=new C(); }catch(e){ return; }
+    const n=this.ctx.sampleRate*2, b=this.ctx.createBuffer(1,n,this.ctx.sampleRate), d=b.getChannelData(0);
+    for(let i=0;i<n;i++) d[i]=Math.random()*2-1; this.noiseBuf=b; },
+  go(){ this.boot(); if(this.ctx&&this.ctx.state==="suspended") this.ctx.resume().catch(()=>{}); return this.sfx&&this.ctx; },
+  tone(f,dur,type,gain,slide){ if(!this.go()) return;
+    const t=this.ctx.currentTime, o=this.ctx.createOscillator(), g=this.ctx.createGain();
+    o.type=type||"triangle"; o.frequency.setValueAtTime(f,t);
+    if(slide) o.frequency.exponentialRampToValueAtTime(Math.max(40,slide),t+dur);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(gain==null?.1:gain,t+.008);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g).connect(this.ctx.destination); o.start(t); o.stop(t+dur+.02); },
+  nz(dur,freq,q,gain){ if(!this.go()||!this.noiseBuf) return;
+    const t=this.ctx.currentTime, s=this.ctx.createBufferSource(), f=this.ctx.createBiquadFilter(), g=this.ctx.createGain();
+    s.buffer=this.noiseBuf; f.type="bandpass"; f.frequency.value=freq; f.Q.value=q||4;
+    g.gain.setValueAtTime(gain==null?.14:gain,t); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    s.connect(f).connect(g).connect(this.ctx.destination); s.start(t); s.stop(t+dur+.02); },
+  chip(){ this.nz(.07,2600,7,.13); this.tone(900,.05,"sine",.05); },
+  flip(){ this.nz(.13,900,1.6,.13); this.tone(520,.1,"triangle",.05,240); },
+  tick(){ this.tone(1500,.035,"square",.035); },
+  bad(){ this.tone(220,.5,"sawtooth",.1,70); setTimeout(()=>this.tone(150,.45,"square",.06,60),90); },
+  stamp(){ this.nz(.11,230,1.2,.2); this.tone(120,.16,"sine",.11,70); },
+  slate(){ this.nz(.22,420,1.1,.1); this.tone(330,.22,"sine",.06,165); },
+  bell(){ [880,1320].forEach((f,i)=>setTimeout(()=>this.tone(f,.6,"sine",.08),i*120)); },
+  /* --- nhạc hoan hô: kèn chiến thắng + tiếng vỗ tay + tiếng reo của đám đông --- */
+  brass(bus,f,t0,d,gain){ const c=this.ctx, o=c.createOscillator(), o2=c.createOscillator(), lp=c.createBiquadFilter(), g=c.createGain();
+    o.type="sawtooth"; o2.type="square"; o.frequency.value=f; o2.frequency.value=f*1.003;
+    lp.type="lowpass"; lp.frequency.setValueAtTime(900,t0); lp.frequency.linearRampToValueAtTime(2600,t0+.06);
+    const v=gain==null?.07:gain; g.gain.setValueAtTime(0,t0); g.gain.linearRampToValueAtTime(v,t0+.03);
+    g.gain.setValueAtTime(v*.8,t0+Math.max(.05,d-.06)); g.gain.exponentialRampToValueAtTime(.0001,t0+d+.18);
+    o.connect(lp); o2.connect(lp); lp.connect(g).connect(bus); o.start(t0); o2.start(t0); o.stop(t0+d+.25); o2.stop(t0+d+.25); },
+  clap(bus,t0,v){ const c=this.ctx, s=c.createBufferSource(), f=c.createBiquadFilter(), g=c.createGain();
+    s.buffer=this.noiseBuf; f.type="bandpass"; f.frequency.value=800+Math.random()*2200; f.Q.value=.9+Math.random()*1.3;
+    g.gain.setValueAtTime(0,t0); g.gain.linearRampToValueAtTime(v,t0+.002); g.gain.exponentialRampToValueAtTime(.0001,t0+.05+Math.random()*.06);
+    s.connect(f).connect(g).connect(bus); s.start(t0,Math.random()*1.7,.14); },
+  cheer(dur){ if(!this.go()||!this.noiseBuf) return; const c=this.ctx, t=c.currentTime+.05, D=dur||4.5;
+    this.stopCheer(); const bus=c.createGain(); bus.gain.value=1; bus.connect(c.destination); this.bus=bus;
+    [[523,0,.14],[659,.15,.14],[784,.3,.14],[1047,.45,.42],[880,.9,.14],[1047,1.05,.9]].forEach(([f,st,d])=>{
+      this.brass(bus,f,t+st,d); this.brass(bus,f*.5,t+st,d,.035); });
+    this.brass(bus,392,t+1.05,.9,.04); this.brass(bus,659,t+1.05,.9,.04);
+    const n=Math.round(D*110);
+    for(let i=0;i<n;i++){ const x=Math.random(); const tt=t+.2+Math.pow(x,1.25)*D; this.clap(bus,tt,.035+Math.random()*.08*(1-x*.6)); }
+    const s=c.createBufferSource(), lp=c.createBiquadFilter(), bp=c.createBiquadFilter(), g=c.createGain();
+    s.buffer=this.noiseBuf; s.loop=true; lp.type="lowpass"; lp.frequency.value=1400; bp.type="peaking"; bp.frequency.value=500; bp.gain.value=8;
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.045,t+.7); g.gain.setValueAtTime(.045,t+D*.55); g.gain.exponentialRampToValueAtTime(.0001,t+D+.6);
+    s.connect(lp).connect(bp).connect(g).connect(bus); s.start(t); s.stop(t+D+.8);
+    [0,.35,.7].forEach(d=>{ const o=c.createOscillator(), og=c.createGain(); o.type="triangle";
+      o.frequency.setValueAtTime(700+Math.random()*300,t+.5+d); o.frequency.exponentialRampToValueAtTime(1500+Math.random()*400,t+.75+d);
+      og.gain.setValueAtTime(0,t+.5+d); og.gain.linearRampToValueAtTime(.025,t+.55+d); og.gain.exponentialRampToValueAtTime(.0001,t+.85+d);
+      o.connect(og).connect(bus); o.start(t+.5+d); o.stop(t+.9+d); });
+  },
+  stopCheer(){ if(this.bus&&this.ctx){ const b=this.bus, t=this.ctx.currentTime; try{ b.gain.cancelScheduledValues(t); b.gain.setValueAtTime(b.gain.value,t); b.gain.linearRampToValueAtTime(0,t+.3); }catch(e){} setTimeout(()=>{ try{b.disconnect()}catch(e){} },500); this.bus=null; } },
+  /* --- AI đọc câu hỏi: Giọng máy (ưu tiên Nam trầm / Adam) & ElevenLabs API --- */
+  loadVoices(){
+    if(!("speechSynthesis" in window)) return [];
+    const v=speechSynthesis.getVoices()||[];
+    if(!v.length) return [];
+    if(this.voiceUri){
+      const saved=v.find(x=>x.voiceURI===this.voiceUri||x.name===this.voiceUri);
+      if(saved){ this.vi=saved; return v; }
+    }
+    const adam=v.find(x=>/adam/i.test(x.name));
+    if(adam){ this.vi=adam; return v; }
+    const viMale=v.find(x=>/^vi([-_]|$)/i.test(x.lang)&&/nam|minh|male/i.test(x.name));
+    if(viMale){ this.vi=viMale; return v; }
+    const viAny=v.find(x=>/^vi([-_]|$)/i.test(x.lang)||/vietnam|việt/i.test(x.name));
+    if(viAny){ this.vi=viAny; return v; }
+    const genMale=v.find(x=>/male|david|mark|guy/i.test(x.name));
+    this.vi=genMale||v[0]||null;
+    return v;
+  },
+  voiceLabel(){
+    if(this.engine==="elevenlabs"&&this.apiKey){
+      return {ok:true,txt:`🎙 Đang dùng: Giọng Adam AI (ElevenLabs — chuẩn studio)`};
+    }
+    if(!("speechSynthesis" in window)) return {ok:false,txt:"Trình duyệt không hỗ trợ đọc. Câu hỏi chỉ hiện chữ, đồng hồ chạy ngay."};
+    const v=this.loadVoices();
+    if(!v.length) return {ok:null,txt:"Đang nạp danh sách giọng…"};
+    if(this.vi){
+      const isAdam=/adam/i.test(this.vi.name);
+      const isMale=/nam|minh|adam|david|mark|guy|male/i.test(this.vi.name);
+      const isVi=/^vi([-_]|$)/i.test(this.vi.lang)||/vietnam|việt/i.test(this.vi.name);
+      const desc=isAdam?`Giọng Adam (${this.vi.name})`
+        :(isVi&&isMale)?`${this.vi.name} (Nam trầm mô phỏng Adam)`
+        :isVi?`${this.vi.name} (Hạ trầm ${Math.round((this.pitch||0.85)*100)}% mô phỏng Adam)`
+        :`${this.vi.name} (Trầm ${Math.round((this.pitch||0.85)*100)}%)`;
+      return {ok:true,txt:`🎙 Giọng đọc: ${desc}`};
+    }
+    return {ok:false,txt:"Máy chưa có giọng tiếng Việt — câu hỏi chỉ hiện chữ, đồng hồ chạy ngay."};
+  },
+  hushAudio(){
+    if(this._audio){
+      try{ this._audio.pause(); this._audio.currentTime=0; }catch(e){}
+      this._audio=null;
+    }
+  },
+  hush(){
+    this.gen++;
+    clearTimeout(this.st); clearTimeout(this.sf);
+    try{ if("speechSynthesis" in window) speechSynthesis.cancel(); }catch(e){}
+    this.hushAudio();
+    this.speaking=false;
+  },
+  async speakElevenLabs(text,onDone){
+    const g=++this.gen;
+    this.hushAudio();
+    if(!this.apiKey){ return this.speakBrowser(text,onDone); }
+    const parts=(Array.isArray(text)?text:String(text).split(/(?<=[.!?])\s+/)).map(x=>String(x).trim()).filter(Boolean);
+    const fullText=parts.join(". ");
+    this.speaking=true;
+    try{
+      let blobUrl=this.audioCache[fullText];
+      if(!blobUrl){
+        const res=await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${this.voiceId}`,{
+          method:"POST",
+          headers:{
+            "xi-api-key":this.apiKey.trim(),
+            "Content-Type":"application/json",
+            "Accept":"audio/mpeg"
+          },
+          body:JSON.stringify({
+            text:fullText,
+            model_id:"eleven_multilingual_v2",
+            voice_settings:{stability:0.5,similarity_boost:0.85,style:0.0,use_speaker_boost:true}
+          })
+        });
+        if(!res.ok){
+          const err=await res.json().catch(()=>({}));
+          console.warn("ElevenLabs TTS Error:",err);
+          alert("Lỗi ElevenLabs: "+(err.detail?.message||res.statusText)+". Đang chuyển về giọng nam trình duyệt.");
+          this.engine="browser"; save(); paintVoiceStat();
+          return this.speakBrowser(text,onDone);
+        }
+        const blob=await res.blob();
+        blobUrl=URL.createObjectURL(blob);
+        this.audioCache[fullText]=blobUrl;
+      }
+      if(g!==this.gen) return;
+      const audio=new Audio(blobUrl);
+      this._audio=audio;
+      audio.playbackRate=this.rate;
+      audio.onended=()=>{ if(g===this.gen){ this.speaking=false; this._audio=null; onDone&&onDone(); } };
+      audio.onerror=()=>{ if(g===this.gen){ this.speaking=false; this._audio=null; onDone&&onDone(); } };
+      await audio.play();
+      return true;
+    }catch(e){
+      console.error(e);
+      this.speaking=false;
+      return this.speakBrowser(text,onDone);
+    }
+  },
+  speakBrowser(text,onDone){
+    const ok=this.voice&&("speechSynthesis" in window)&&(this.loadVoices(),this.vi);
+    const g=++this.gen; clearTimeout(this.st); clearTimeout(this.sf);
+    try{ if("speechSynthesis" in window) speechSynthesis.cancel(); }catch(e){}
+    if(!ok){ this.speaking=false; onDone&&setTimeout(onDone,0); return false; }
+    const parts=(Array.isArray(text)?text:String(text).split(/(?<=[.!?])\s+/)).map(x=>String(x).trim()).filter(Boolean);
+    let i=0, fired=false;
+    const finish=()=>{ if(fired||g!==this.gen) return; fired=true; clearTimeout(this.sf); this.speaking=false; onDone&&onDone(); };
+    const next=()=>{ if(g!==this.gen) return; if(i>=parts.length) return finish();
+      const t=parts[i++]; clearTimeout(this.sf);
+      this.sf=setTimeout(next, 2500+t.length*120);
+      try{ const u=new SpeechSynthesisUtterance(t); u.voice=this.vi; u.lang=this.vi.lang||"vi-VN"; u.rate=AU.rate; u.pitch=AU.pitch||0.85;
+        u.onend=()=>{ if(g===this.gen){ clearTimeout(this.sf); next(); } }; u.onerror=u.onend; this._u=u; speechSynthesis.speak(u);
+      }catch(e){ finish(); } };
+    this.speaking=true; this.st=setTimeout(next,60); return true;
+  },
+  speak(text,onDone){
+    if(!this.voice){ this.speaking=false; onDone&&setTimeout(onDone,0); return false; }
+    if(this.engine==="elevenlabs"&&this.apiKey){
+      return this.speakElevenLabs(text,onDone);
+    }
+    return this.speakBrowser(text,onDone);
+  }
+};
+if("speechSynthesis" in window){ AU.loadVoices(); const onv=()=>{ AU.loadVoices(); populateVoiceList(); paintVoiceStat(); };
+  speechSynthesis.addEventListener?.("voiceschanged",onv); [300,900,2000].forEach(t=>setTimeout(onv,t)); }
+function cycleRate(){ AU.rate=RATES[(RATES.indexOf(AU.rate)+1)%RATES.length]; save();
+  if(AU._audio) AU._audio.playbackRate=AU.rate;
+  document.querySelectorAll("#trate").forEach(b=>b.textContent=`⏩ ${AU.rate}×`); }
+function paintVoiceStat(){ const el=document.getElementById("vstat"); if(!el) return; const s=AU.voiceLabel();
+  el.textContent=s.txt; el.style.color=s.ok===true?"var(--good)":s.ok===false?"var(--ink-dim)":"var(--muted)"; }
+function populateVoiceList(){
+  const sel=document.getElementById("voicesel");
+  if(!sel||!("speechSynthesis" in window)) return;
+  const voices=speechSynthesis.getVoices()||[];
+  if(!voices.length){ sel.innerHTML=`<option value="">(Đang nạp danh sách giọng...)</option>`; return; }
+  const sorted=[...voices].sort((a,b)=>{
+    const aVi=/^vi([-_]|$)/i.test(a.lang), bVi=/^vi([-_]|$)/i.test(b.lang);
+    const aAdam=/adam/i.test(a.name), bAdam=/adam/i.test(b.name);
+    const aMale=/nam|minh|male|david|mark/i.test(a.name), bMale=/nam|minh|male|david|mark/i.test(b.name);
+    if(aAdam&&!bAdam) return -1; if(!aAdam&&bAdam) return 1;
+    if(aVi&&aMale&&!(bVi&&bMale)) return -1; if(!(aVi&&aMale)&&bVi&&bMale) return 1;
+    if(aVi&&!bVi) return -1; if(!aVi&&bVi) return 1;
+    if(aMale&&!bMale) return -1; if(!aMale&&bMale) return 1;
+    return a.name.localeCompare(b.name);
+  });
+  sel.innerHTML="";
+  sorted.forEach(v=>{
+    const opt=document.createElement("option");
+    opt.value=v.voiceURI||v.name;
+    const isVi=/^vi([-_]|$)/i.test(v.lang);
+    const isAdam=/adam/i.test(v.name);
+    const isMale=/nam|minh|male|david|mark/i.test(v.name);
+    let tag=isAdam?"⭐ Adam":(isVi&&isMale)?"⭐ Tiếng Việt (Nam)":isVi?"Tiếng Việt":isMale?"Nam (EN)":v.lang;
+    opt.textContent=`${v.name} [${tag}]`;
+    if(AU.vi&&(v.voiceURI===AU.vi.voiceURI||v.name===AU.vi.name)) opt.selected=true;
+    sel.appendChild(opt);
+  });
+}
+
+const strip=h=>String(h).replace(/<[^>]+>/g," ").replace(/&nbsp;/g," ").replace(/\s+/g," ").trim();
+const forSpeech=t=>strip(t).replace(/m[′']/g,"m phẩy").replace(/T[′']/g,"T phẩy").replace(/→/g,", rồi ").replace(/\bUSD\b/g,"đô la")
+  .replace(/\/năm/g," mỗi năm").replace(/(\d)\.(\d{3})/g,"$1$2").replace(/−/g,"trừ ").replace(/×/g,"nhân").replace(/÷/g,"chia").replace(/=/g," bằng ").replace(/\s+/g," ");
+const beats=html=>{ if(!html) return [];
+  const p=String(html).split(/<\/p>/i).map(s=>s.replace(/<p[^>]*>/ig,"").trim()).filter(Boolean); return p.length?p:[html]; };
+const say=(who,...ts)=>ts.map(t=>({who,t}));
+
+/* ========================= 15 QUYẾT ĐỊNH — theo "Kịch bản thuyết trình trước câu hỏi" =========================
+   Mỗi quyết định 3 bước:  01 Thuyết trình kiến thức mới  →  02 Câu hỏi  →  03 Chốt đáp án & giải thích ngắn
+   event = NPC thông báo biến cố · know = phần trình bày kiến thức · fb = phản hồi ngắn · after = chỉ dẫn sân khấu / chuyển cảnh
+   opts[k] = [nội dung phương án, phản ứng của NPC khi đội chọn phương án đó] */
+const dir=t=>({dir:true,t});
+const ROUNDS=[
+/* ---------- HỒI 1 · Quỳnh Giang ---------- */
+{ block:1, npc:"giang", tag:"Yêu cầu từ ngân hàng", title:"Chọn mô hình kinh doanh",
+  event:say("giang","Chúc mừng các vị vừa thành lập nhà máy! Nhưng trước khi giải ngân, ngân hàng cần biết mục tiêu vận động của đồng tiền trong doanh nghiệp. Mời các vị nhìn vào bản kế hoạch đầu tư."),
+  know:`Trong lưu thông hàng hóa giản đơn, công thức là <b>H – T – H</b>: bán hàng lấy tiền để mua hàng khác phục vụ nhu cầu tiêu dùng. Mục đích cuối cùng là <b>giá trị sử dụng</b>.
+    <p>Còn công thức chung của tư bản là <b>T – H – T′</b>: ứng tiền để mua hàng hóa, rồi bán nhằm thu về số tiền lớn hơn. <b>T′ = T + Δt</b>; số tăng thêm Δt được gọi là <b>giá trị thặng dư (m)</b>. Khác biệt then chốt là mục đích làm tăng giá trị vốn.</p>`,
+  ask:"Ngân hàng chỉ cấp giấy phép cho kế hoạch có mục đích gia tăng giá trị vốn ban đầu. Các vị chọn mô hình nào?",
+  opts:{A:["Bán hàng lấy tiền, rồi dùng tiền mua hàng để phục vụ tiêu dùng.",
+           "Quỳnh Giang đóng dấu <b>CẦN SỬA KẾ HOẠCH</b>: «Bán để mua về đồ dùng — đó là H–T–H. Mục đích cuối cùng là giá trị sử dụng. Ngân hàng không cấp vốn cho kế hoạch không làm tiền tăng lên.»"],
+        B:["Ứng tiền mua hàng hóa, bán hàng hóa để thu về số tiền lớn hơn ban đầu.",
+           "Quỳnh Giang đóng dấu <b>ĐỦ ĐIỀU KIỆN ĐẦU TƯ</b>: «T–H–T′ — bắt đầu bằng tiền, kết thúc bằng nhiều tiền hơn. Đó là công thức chung của tư bản.»"]},
+  correct:"B", ans:"B — T – H – T′", hint:"So mục tiêu tiêu dùng với mục tiêu làm tăng số tiền ứng trước.",
+  fb:"Chọn B vì doanh nghiệp vận động tiền theo công thức tư bản, nhằm thu về T′ lớn hơn T.",
+  after:[dir("Đội đúng nhận dấu ĐỦ ĐIỀU KIỆN ĐẦU TƯ; đội sai nhận lệnh chỉnh sửa phương án, vẫn được đi tiếp.")]},
+
+{ block:1, npc:"giang", tag:"Phát hiện bất thường", title:"Điều tra lợi nhuận bí ẩn",
+  event:say("giang","<b>Khoan đã!</b> Một thương nhân mua một kiện hàng với giá <b>20 USD</b>, rồi bán lại <b>25 USD</b>. Ông ta khoe đã tạo ra <b>5 USD giá trị mới</b> cho xã hội. Hội đồng kế toán có đồng ý không?"),
+  know:`Khi hàng hóa mua bán <b>ngang giá</b>, giá trị chỉ chuyển từ hình thái hàng sang tiền hoặc ngược lại; tổng giá trị xã hội không tự tăng.
+    <p>Ngay cả khi bán đắt hay mua rẻ, phần một người được chỉ là phần người khác mất. Vì thế, theo C. Mác, <b>lưu thông tự nó không tạo ra giá trị thặng dư</b>, dù giá trị thặng dư cũng không thể hình thành ngoài lưu thông. Đây là <b>mâu thuẫn</b> cần giải thích.</p>`,
+  ask:"Phòng kế toán phải kết luận về khoản 5 USD mà thương nhân thu thêm.",
+  opts:{A:["Tổng giá trị xã hội tăng thêm 5 USD nhờ giao dịch.",
+           "Quỳnh Giang mở sổ của cả hai bên: «Người bán có thêm 5 USD, nhưng túi người mua vơi đi đúng 5 USD. Cộng lại, xã hội không giàu thêm đồng nào. Kết luận bị bác.»"],
+        B:["Thương nhân được thêm 5 USD từ người mua; giao dịch không tự tạo ra tổng giá trị mới.",
+           "Quỳnh Giang gật đầu: «Đúng. Tiền chỉ đổi túi. Thương nhân được bao nhiêu thì người mua mất bấy nhiêu.»"],
+        C:["Tiền tự sinh ra giá trị mới khi lưu thông.",
+           "Quỳnh Giang bật cười: «Nếu tiền tự đẻ ra tiền, tôi chỉ cần chuyển tiền qua lại cả ngày là thành tỷ phú. Trong lưu thông, tiền chỉ đổi hình thái, không tự lớn lên.»"],
+        D:["Mọi giao dịch bán đắt đều tạo ra giá trị thặng dư cho toàn xã hội.",
+           "Quỳnh Giang: «Nếu ai cũng bán đắt hơn 10%, thì mỗi người được 10% khi bán nhưng mất 10% khi mua. Không ai giàu thêm. Bán đắt không tạo ra giá trị mới cho xã hội.»"]},
+  correct:"B", ans:"B", hint:"Kiểm tra đồng thời phần được của người bán và phần mất của người mua.",
+  fb:"Khoản 5 USD được chuyển từ người mua sang người bán, không phải giá trị mới do trao đổi tạo ra.",
+  after:[{who:"giang",t:"Để tiền thật sự biến thành tư bản, nhà máy cần một <b>hàng hóa đặc biệt</b>: khi sử dụng, nó tạo ra giá trị mới lớn hơn giá trị của chính nó. Tôi sẽ đưa các vị đến <b>thị trường sức lao động</b>."},
+    dir("Giang đóng dấu PHÊ DUYỆT. Màn hình chuyển sang quầy tuyển dụng.")]},
+
+/* ---------- HỒI 2 · Minh Châu ---------- */
+{ block:2, npc:"chau", tag:"Tin khẩn từ Sở Lao động", title:"Tuyển công nhân",
+  event:say("chau","Các tập đoàn đã nhận giấy phép, nhưng máy dệt không tự chạy! Các vị có nguyên liệu, có thiết bị nhưng <b>chưa có công nhân</b>. Sở Lao động yêu cầu tuyển đúng người theo điều kiện thị trường."),
+  know:`<b>Sức lao động</b> là toàn bộ năng lực thể chất và tinh thần của con người được vận dụng trong quá trình sản xuất.
+    <p>Sức lao động trở thành hàng hóa khi người lao động đồng thời có <b>hai điều kiện</b>: <b>(1)</b> tự do về thân thể, có quyền bán sức lao động; <b>(2)</b> không có đủ tư liệu sản xuất để tự sản xuất hàng hóa đem bán, nên phải làm thuê.</p>`,
+  ask:"Hồ sơ nào đáp ứng đồng thời hai điều kiện để sức lao động trở thành hàng hóa?",
+  opts:{A:["Người tự do thân thể, không đủ tư liệu sản xuất để tự sản xuất hàng hóa đem bán.",
+           "Minh Châu ký thẻ <b>TUYỂN DỤNG</b>: «Tự do thân thể — được quyền bán sức lao động. Không có tư liệu sản xuất — phải bán sức lao động để sống. Đủ cả hai điều kiện.»"],
+        B:["Người tự do thân thể, sở hữu đủ nhà xưởng và máy móc để tự kinh doanh.",
+           "Minh Châu trả hồ sơ: «Người này có nhà xưởng, có máy móc — họ tự sản xuất được, chẳng cần làm thuê cho ai. Họ là đối thủ của các vị, không phải công nhân.»"],
+        C:["Người không có quyền tự do quyết định việc bán sức lao động của mình.",
+           "Minh Châu từ chối: «Người không được tự quyết việc bán sức lao động thì không thể tự ký hợp đồng. Đó là quan hệ lệ thuộc, không phải mua bán hàng hóa sức lao động.»"]},
+  correct:"A", ans:"A", hint:"Phải đáp ứng cả quyền tự do bán sức lao động lẫn sự thiếu tư liệu sản xuất.",
+  fb:"Ứng viên A vừa tự do bán sức lao động vừa phải làm thuê vì không đủ tư liệu sản xuất.",
+  after:[dir("HR của mỗi đội ký thẻ TUYỂN DỤNG. Châu đưa mẫu hợp đồng cho các đội.")]},
+
+{ block:2, npc:"chau", tag:"Hợp đồng lao động", title:"Xây dựng hợp đồng",
+  event:say("chau","Hợp đồng quy định ngày làm việc <b>8 giờ</b>, giá trị sức lao động là <b>15 USD</b>. Phòng nhân sự hãy xác định đầy đủ những chi phí được tính trong giá trị hàng hóa sức lao động."),
+  know:`Hàng hóa sức lao động có hai thuộc tính: <b>giá trị</b> và <b>giá trị sử dụng</b>. Giá trị của nó được xác định gián tiếp qua các tư liệu sinh hoạt cần thiết để sản xuất và tái sản xuất sức lao động.
+    <p>Theo nội dung chương học, giá trị ấy gồm <b>ba bộ phận</b>: tư liệu sinh hoạt cần thiết cho bản thân người lao động; chi phí đào tạo; và tư liệu sinh hoạt cần thiết để nuôi con của người lao động. Giá trị sử dụng của sức lao động rất đặc biệt: khi được tiêu dùng trong sản xuất, nó <b>tạo ra giá trị mới lớn hơn giá trị bản thân nó</b>.</p>`,
+  ask:"Phòng HR phải chọn báo cáo nêu đủ ba bộ phận cấu thành giá trị sức lao động.",
+  opts:{A:["Chỉ gồm chi phí ăn uống của riêng người lao động.",
+           "Đại diện công nhân lên tiếng: «Chỉ đủ ăn thì ai trả tiền học nghề, ai nuôi con chúng tôi? Hợp đồng thiếu hai khoản.»"],
+        B:["Chi phí mua máy móc và đào tạo công nhân.",
+           "Minh Châu gạch bỏ dòng đầu: «Máy móc là tư liệu sản xuất của nhà máy, không nằm trong giá trị sức lao động của công nhân.»"],
+        C:["Tư liệu sinh hoạt cần thiết cho người lao động, chi phí đào tạo và tư liệu sinh hoạt để nuôi con.",
+           "Minh Châu đóng dấu: «Đầy đủ. Sinh hoạt của người lao động, chi phí đào tạo, và nuôi con — để sức lao động được tái sản xuất qua các thế hệ.»"],
+        D:["Chỉ gồm tiền ăn và tiền thưởng năng suất.",
+           "Minh Châu lắc đầu: «Tiền thưởng năng suất không phải bộ phận cấu thành giá trị sức lao động. Và vẫn thiếu chi phí đào tạo, thiếu phần nuôi con.»"]},
+  correct:"C", ans:"C", hint:"Giá trị sức lao động gắn với duy trì, đào tạo và tái sản xuất sức lao động qua các thế hệ.",
+  fb:"C bao quát ba bộ phận cần thiết để duy trì và tái sản xuất sức lao động.",
+  after:[dir("HR Manager và đại diện công nhân ký HỢP ĐỒNG: 8 GIỜ – 15 USD."),
+    {who:"chau",t:"Hợp đồng đã ký! Xin nhớ: doanh nghiệp mua <b>sức lao động</b> chứ không mua bản thân con người. Đặc tính tạo giá trị mới của sức lao động sẽ được kiểm chứng ngay tại xưởng dệt."},
+    dir("Cửa xưởng mở. Tiếng máy dệt tăng dần.")]},
+
+/* ---------- HỒI 3 · Minh Đức (Minh Châu hỗ trợ) ---------- */
+{ block:3, npc:"duc", tag:"Lệnh sản xuất · 08:00", title:"Báo cáo sản xuất",
+  event:say("duc","<b>BÁO CÁO KHẨN!</b> Khách hàng đặt <b>100 kg sợi</b>, phải hoàn thành trong ngày! Bộ phận sản xuất chuẩn bị 50 kg bông cho ca đầu, kiểm tra máy móc và nhân lực!"),
+  know:`Theo ví dụ của giáo trình, ngày lao động kéo dài <b>8 giờ</b>. Trong 4 giờ đầu, công nhân sử dụng <b>50 kg bông trị giá 50 USD</b>; máy hao mòn <b>3 USD</b>; lao động sống tạo ra <b>15 USD giá trị mới</b>.
+    <p>Giá trị sản phẩm gồm <b>giá trị tư liệu sản xuất chuyển vào sản phẩm</b> (bông và hao mòn máy) cộng với <b>giá trị mới do lao động sống tạo ra</b>. Bộ phận giá trị mới không phải do máy móc tự sinh ra.</p>`,
+  ask:"Trong 4 giờ đầu, giá trị 50 kg sợi được tạo ra là bao nhiêu?",
+  opts:{A:["53 USD","Minh Đức: «Phòng kế toán định báo giá trị 50 kg sợi chỉ có 53 USD? Vậy 15 USD giá trị mới công nhân tạo ra đi đâu? Điều chỉnh sổ sách ngay!»"],
+        B:["65 USD","Minh Đức: «65 USD? Các vị cộng bông với giá trị mới mà quên 3 USD hao mòn máy. Máy cũng chuyển giá trị của nó vào sợi đấy!»"],
+        C:["68 USD","Minh Đức: «Khớp sổ! 50 USD bông + 3 USD hao mòn máy + 15 USD giá trị mới = 68 USD. Nhập kho 50 kg sợi!»"],
+        D:["83 USD","Minh Đức: «83 USD? Các vị cộng 15 USD giá trị mới hai lần rồi. Giá trị mới chỉ được tính một lần thôi!»"]},
+  correct:"C", ans:"C — 50 + 3 + 15 = 68 USD", hint:"Cộng giá trị bông, phần hao mòn máy và giá trị mới do lao động tạo ra.",
+  fb:"50 USD bông và 3 USD hao mòn máy được chuyển vào sản phẩm, cộng thêm 15 USD giá trị mới nên tổng là 68 USD.",
+  after:[dir("Đồng hồ 12:00. Các đội nhập kho 50 kg sợi vào bảng sản lượng.")]},
+
+{ block:3, npc:"duc", tag:"Báo cáo cuối ca · 16:00", title:"Truy tìm khoản giá trị thặng dư",
+  event:[{who:"chau",as:"Đại diện công nhân",t:"Thưa các chủ xưởng, 4 giờ vừa qua chúng tôi đã tạo ra 15 USD giá trị mới, vừa bằng giá trị sức lao động được trả theo hợp đồng. Nhưng hợp đồng là 8 giờ, nên chúng tôi vẫn làm tiếp 4 giờ nữa."},
+    {who:"duc",t:"<b>Tiếp tục vận hành!</b> Bổ sung 50 kg bông, máy tiếp tục hao mòn thêm 3 USD. Đến 16:00, đơn hàng đủ 100 kg sợi, nhưng kế toán vừa phát hiện <b>chênh lệch đáng ngờ</b>!"}],
+  know:`Trong 4 giờ tiếp theo, công nhân tiếp tục tạo ra 15 USD giá trị mới, dù nhà tư bản không phải mua thêm sức lao động cho thời gian đã nằm trong hợp đồng 8 giờ.
+    <p>Cả ngày, giá trị sản phẩm là <b>136 USD</b>. Tư bản ứng trước để sản xuất gồm 100 USD bông, 6 USD hao mòn máy và 15 USD mua sức lao động, tức <b>121 USD</b>. Phần giá trị mới dôi ra ngoài giá trị sức lao động được gọi là <b>giá trị thặng dư (m)</b>.</p>`,
+  ask:"Phòng kế toán báo tổng chi phí ứng trước 121 USD, tổng giá trị sản phẩm 136 USD. Giá trị thặng dư là bao nhiêu?",
+  opts:{A:["0 USD","Minh Đức: «Bằng 0? Vậy sổ sách đang nói dối — 136 khác 121. Vẫn còn 15 USD chưa ai giải thích.»"],
+        B:["15 USD","Minh Đức: «136 − 121 = 15 USD. Các vị vừa tìm ra khoản dôi ra.»"],
+        C:["30 USD","Minh Đức: «30 USD là toàn bộ giá trị mới của cả 8 giờ, tức v + m. Trong đó 15 USD đã trả cho công nhân — phần dôi ra chỉ là 15 USD.»"],
+        D:["121 USD","Minh Đức: «121 USD là tư bản ứng trước — số tiền các vị bỏ ra, không phải phần dôi ra.»"]},
+  correct:"B", ans:"B — 136 − 121 = 15 USD", hint:"Tính phần chênh lệch giữa tổng giá trị sản phẩm và tổng tư bản ứng trước.", decode:true,
+  fb:"15 USD là phần giá trị mới công nhân tạo ra vượt quá giá trị sức lao động; theo C. Mác, đó là <b>giá trị thặng dư</b>.",
+  after:[dir("Các đội nộp báo cáo: 100 kg sợi / giá trị 136 USD / ứng trước 121 USD / m = 15 USD."),
+    {who:"duc",t:"Nhà máy đã tìm ra 15 USD bí ẩn. Nhưng Hội đồng Công nghiệp muốn biết khoản nào là tư liệu sản xuất, khoản nào dùng mua sức lao động. Hồ sơ được chuyển sang <b>phòng tài chính</b>!"}]},
+
+/* ---------- HỒI 4 · Khánh Linh & Ngọc Linh ---------- */
+{ block:4, npc:"klinh", tag:"Cảnh báo tài chính", title:"Phân loại nguồn vốn",
+  event:say("klinh","Phòng kế toán báo cáo khẩn: có người cho rằng máy móc tạo ra toàn bộ giá trị thặng dư, người khác lại đòi xếp tiền công vào chi phí máy móc. Nếu phân loại sai, <b>ngân hàng sẽ ngừng giải ngân</b>!"),
+  know:`<b>Tư bản bất biến</b>, ký hiệu <b>c</b>, là tư bản tồn tại dưới hình thái tư liệu sản xuất như bông, máy móc, nhà xưởng. Giá trị của chúng được bảo tồn và chuyển vào sản phẩm, nhưng không tự làm tăng lượng giá trị.
+    <p><b>Tư bản khả biến</b>, ký hiệu <b>v</b>, dùng mua hàng hóa sức lao động. Thông qua lao động sống, công nhân tạo ra giá trị mới v + m. Công thức cấu thành giá trị hàng hóa: <b>G = c + (v + m)</b>. Trong ví dụ, phần bông và hao mòn máy thuộc c; tiền mua sức lao động thuộc v.</p>`,
+  ask:"Nhà máy dùng 100 USD bông, 6 USD hao mòn máy và 15 USD mua sức lao động. Báo cáo nào đúng?",
+  opts:{A:["c = 106 USD, v = 15 USD.","Khánh Linh đóng dấu: «Sổ sách đã khớp. Bông và máy là tư liệu sản xuất: c = 100 + 6 = 106 USD. Tiền mua sức lao động: v = 15 USD.»"],
+        B:["c = 15 USD, v = 106 USD.","Khánh Linh: «Đảo ngược rồi! 106 USD là bông và máy — tư liệu sản xuất, tức là c. Chỉ 15 USD mua sức lao động mới là v.»"],
+        C:["Toàn bộ 121 USD đều là tư bản bất biến.","Khánh Linh: «Nếu cả 121 USD đều bất biến, thì 15 USD giá trị thặng dư lấy đâu ra? Phần mua sức lao động là tư bản khả biến.»"],
+        D:["Máy móc là bộ phận duy nhất tạo ra giá trị thặng dư.","Khánh Linh: «Máy chỉ chuyển dần giá trị của chính nó vào sản phẩm — 6 USD, không hơn. Máy là điều kiện sản xuất, không phải nguồn gốc giá trị thặng dư.»"]},
+  correct:"A", ans:"A", hint:"c gắn với tư liệu sản xuất; v gắn với mua hàng hóa sức lao động.",
+  fb:"Bông và hao mòn máy tạo thành <b>c = 106 USD</b>; phần mua sức lao động là <b>v = 15 USD</b>.",
+  after:[dir("Các đội sửa sổ và đóng dấu ĐÃ PHÂN LOẠI VỐN.")]},
+
+{ block:4, npc:"mlinh", tag:"Hợp đồng tiền lương", title:"Duyệt báo cáo tiền công",
+  event:[dir("Ngọc Linh bước ra cầm bảng lương và phiếu duyệt khoản chi 15 USD."),
+    {who:"mlinh",t:"<b>Vẫn còn lỗi!</b> Báo cáo của phòng nhân sự viết: <b>“Chúng tôi trả 15 USD để mua lao động.”</b> Một chữ có thể làm sai cả bản chất hợp đồng. Mời các vị nghe quy định trước khi ký duyệt."}],
+  know:`Trong lý luận của C. Mác, <b>tiền công</b> về bản chất là giá cả của hàng hóa sức lao động; trên bề mặt, nó thường biểu hiện thành “giá cả của lao động”. Cần phân biệt <b>sức lao động</b> (năng lực được bán) và <b>lao động</b> (quá trình năng lực ấy được sử dụng).
+    <p><b>Lao động quản lý</b> trực tiếp tham gia quá trình sản xuất cũng có thể được tính là lao động phức tạp tạo ra giá trị mới. Đó không phải lý do để nhầm máy móc với lao động sống.</p>`,
+  ask:"Ban điều hành phải ký duyệt hay sửa lại kết luận trong báo cáo?",
+  opts:{A:["Phê duyệt: tiền công là giá cả của lao động.",
+           "Ngọc Linh: «Nếu 15 USD là giá cả của toàn bộ 8 giờ lao động, thì cả 30 USD giá trị mới phải trả hết cho công nhân — và giá trị thặng dư biến mất. Báo cáo này che giấu bản chất.»"],
+        B:["Yêu cầu sửa: tiền công thực chất là giá cả của hàng hóa sức lao động.",
+           "Ngọc Linh ký duyệt bản sửa: «Đúng. Nhà máy mua <b>sức lao động</b> — năng lực lao động — với giá 15 USD. Lao động là quá trình sử dụng năng lực ấy sau đó.»"]},
+  correct:"B", ans:"B", hint:"Phân biệt năng lực lao động được mua với quá trình lao động diễn ra sau đó.",
+  fb:"Tiền công là giá cả hàng hóa sức lao động; nói “giá cả của lao động” chỉ là biểu hiện bề ngoài.",
+  after:[dir("Các đội đóng dấu ĐÃ KIỂM TOÁN và nhận phép đưa hàng vào lưu thông."),
+    {who:"klinh",t:"Sổ sách đã khớp, nhưng vốn chưa thể quay về nếu hàng vẫn nằm trong kho. Chuyển hồ sơ sang <b>giám đốc chuỗi cung ứng</b>!"}]},
+
+/* ---------- HỒI 5 · Tùng Dương ---------- */
+{ block:5, npc:"duong", tag:"Tồn kho khẩn cấp", title:"Tái cấu trúc vận hành",
+  event:say("duong","Hàng đã sản xuất, nhưng <b>kho ngày càng đầy</b>! Không bán được, tiền không quay về để mua nguyên liệu cho đơn tiếp theo. Các vị cần cứu dòng vốn trước khi nhà máy đóng cửa!"),
+  know:`<b>Tuần hoàn của tư bản</b> là quá trình tư bản lần lượt đi qua ba giai đoạn <b>mua, sản xuất, bán</b>; tồn tại trong ba hình thái tiền tệ, sản xuất, hàng hóa rồi trở về hình thái tiền tệ mang giá trị thặng dư.
+    <p>Khi vòng tuần hoàn ấy lặp lại định kỳ, ta gọi là <b>chu chuyển tư bản</b>. Tốc độ chu chuyển n được xác định bằng thời gian một năm chia cho thời gian một vòng chu chuyển; tính theo tháng thì <b>n = 12/ch</b> (với ch tính bằng tháng).</p>`,
+  ask:"Giả sử một vòng chu chuyển mất 3 tháng, kế hoạch nào phù hợp?",
+  opts:{A:["Mua đầu vào → Sản xuất → Bán hàng; 4 vòng/năm.","Tùng Dương: «Xuất sắc! Kho hàng được giải phóng, hàng hóa được tiêu thụ, vốn tiếp tục chu chuyển. Lệnh XUẤT KHO được ký!»"],
+        B:["Sản xuất → Mua đầu vào → Bán hàng; 4 vòng/năm.","Tùng Dương: «Sản xuất bằng gì khi chưa mua bông, chưa thuê công nhân? Máy đứng im, vốn vẫn nằm im dưới dạng tiền.»"],
+        C:["Mua đầu vào → Sản xuất → Bán hàng; 3 vòng/năm.","Tùng Dương: «Trình tự đúng, nhưng 12 tháng ÷ 3 tháng = 4 vòng, không phải 3. Kế hoạch tính sai tốc độ chu chuyển.»"],
+        D:["Bán hàng → Sản xuất → Mua đầu vào; 12 vòng/năm.","Tùng Dương: «Bán hàng khi kho còn trống? Và 12 vòng/năm nghĩa là mỗi vòng chỉ 1 tháng — sai cả trình tự lẫn dữ kiện.»"]},
+  correct:"A", ans:"A", hint:"Thứ tự mua – sản xuất – bán; 12 tháng chia cho 3 tháng/vòng.",
+  fb:"Đi đúng ba giai đoạn và <b>n = 12/3 = 4 vòng</b> mỗi năm.",
+  after:[dir("Đội đúng nhận lệnh XUẤT KHO; tất cả đội cập nhật sổ chu chuyển.")]},
+
+{ block:5, npc:"duong", tag:"Hồ sơ kỹ thuật", title:"Xử lý khấu hao",
+  event:say("duong","<b>Tin xấu chưa dừng lại:</b> máy dệt dù vẫn hoạt động, bỗng mất giá vì thị trường vừa xuất hiện mẫu mới rẻ hơn. Bộ phận kỹ thuật phải xử lý ngay!"),
+  know:`<b>Tư bản cố định</b> là bộ phận tồn tại dưới dạng tư liệu lao động như máy móc, nhà xưởng; giá trị chuyển dần vào sản phẩm qua nhiều chu kỳ. Nó chịu <b>hao mòn hữu hình</b> do sử dụng hoặc tự nhiên, và <b>hao mòn vô hình</b> khi công nghệ hoặc năng suất xã hội thay đổi làm máy hiện có mất giá.
+    <p><b>Tư bản lưu động</b> gồm nguyên liệu, nhiên liệu, vật liệu phụ và phần tư bản dùng mua sức lao động; toàn bộ giá trị của nó chu chuyển qua một chu kỳ sản xuất.</p>`,
+  ask:"Máy dệt vẫn chạy tốt nhưng mất giá vì xuất hiện máy mới rẻ hơn. Nhận định nào đúng?",
+  opts:{A:["Máy móc là tư bản lưu động, chuyển toàn bộ giá trị qua một chu kỳ.","Tùng Dương: «Máy dùng được nhiều năm, chuyển giá trị dần dần qua từng chu kỳ. Đó là tư bản cố định, không phải lưu động.»"],
+        B:["Nguyên liệu là tư bản cố định vì được mua thường xuyên.","Tùng Dương: «Nguyên liệu chuyển hết giá trị vào sản phẩm ngay trong một chu kỳ — đó là tư bản lưu động. Mua thường xuyên không làm nó thành cố định.»"],
+        C:["Máy móc là tư bản cố định, chuyển dần giá trị vào sản phẩm; trường hợp này là hao mòn vô hình.","Tùng Dương ký báo cáo: «Đánh giá chính xác. Máy cũ vẫn chạy tốt, nhưng mất giá vì máy mới rẻ hơn — đó là hao mòn vô hình.»"],
+        D:["Mọi sự mất giá của máy móc đều là hao mòn hữu hình.","Tùng Dương: «Máy này không hỏng hóc gì, vẫn chạy bình thường. Mất giá vì máy mới ra đời là hao mòn vô hình, không phải hữu hình.»"]},
+  correct:"C", ans:"C", hint:"Máy có thể mất giá khi chưa bị mòn vật chất.",
+  fb:"Máy thuộc tư bản cố định; bị mất giá do tiến bộ kỹ thuật là <b>hao mòn vô hình</b>.",
+  after:[dir("Các đội cập nhật phiếu quản lý tài sản và được phép tiếp tục vận hành."),
+    {who:"duong",t:"Dòng vốn đã thông, kho hàng đã giải phóng. Nhưng hội đồng vừa cử <b>thanh tra</b> đến kiểm tra toàn bộ giá trị thặng dư của nhà máy!"}]},
+
+/* ---------- HỒI 6 · Hà Vy ---------- */
+{ block:6, npc:"vy", tag:"Yêu cầu kiểm toán", title:"Kiểm tra tỷ suất",
+  event:say("vy","Tôi đại diện <b>Hội đồng Công nghiệp</b>. Các nhà máy đang báo cáo thu được giá trị thặng dư. Nhưng tỷ suất khai thác và quy mô thu được không phải là một khái niệm. Hãy chứng minh các vị hiểu bản chất những con số này!"),
+  know:`Theo C. Mác, giá trị thặng dư phản ánh <b>quan hệ kinh tế – xã hội</b> giữa nhà tư bản và công nhân làm thuê: dù hàng hóa sức lao động được mua bán theo nguyên tắc ngang giá, phần giá trị mới vượt quá giá trị sức lao động vẫn thuộc về nhà tư bản.
+    <p><b>Tỷ suất giá trị thặng dư m′</b> thể hiện tỷ lệ giữa m và v: <b>m′ = (m/v) × 100%</b>; cũng có thể tính bằng thời gian lao động thặng dư chia cho thời gian lao động tất yếu rồi nhân 100%. Chỉ tiêu này phản ánh mức độ khai thác sức lao động.</p>`,
+  ask:"Trong báo cáo của nhà máy: v = 15 USD và m = 15 USD. Tỷ suất giá trị thặng dư bằng bao nhiêu?",
+  opts:{A:["50%","Hà Vy: «50% là các vị lấy m chia cho (v + m) = 15/30. Tỷ suất giá trị thặng dư so m với v, không phải với tổng giá trị mới. Báo cáo bị trả về.»"],
+        B:["100%","Hà Vy đóng dấu <b>ĐÃ KIỂM TRA TỶ SUẤT</b>: «m′ = 15/15 × 100% = 100%.»"],
+        C:["150%","Hà Vy: «Không có phép tính nào từ v = 15 và m = 15 ra được 150%. Phòng kế toán cần làm lại.»"],
+        D:["200%","Hà Vy: «200% nghĩa là m gấp đôi v, tức m phải bằng 30 USD. Nhưng m chỉ là 15 USD.»"]},
+  correct:"B", ans:"B — (15/15) × 100% = 100%", hint:"Lấy giá trị thặng dư chia cho tư bản khả biến rồi nhân 100%.",
+  fb:"Giá trị thặng dư bằng giá trị sức lao động, nên tỷ suất <b>m′ là 100%</b>.",
+  after:[dir("Thanh tra đóng dấu ĐÃ KIỂM TRA TỶ SUẤT lên báo cáo.")]},
+
+{ block:6, npc:"vy", tag:"Lệnh mở rộng", title:"Mở rộng quy mô",
+  event:say("vy","Nhà máy sắp mở rộng từ <b>1 lên 10 công nhân</b>. Mức giá trị thặng dư mỗi người tạo ra không đổi. Hội đồng cần dự toán <b>tổng khối lượng</b>, chứ không phải tỷ suất!"),
+  know:`<b>Khối lượng giá trị thặng dư (M)</b> là tổng giá trị thặng dư mà nhà tư bản thu được trong quy mô sản xuất đang xét. Công thức trong giáo trình: <b>M = m′ × V</b> (khi m′ biểu diễn dưới dạng tỷ số), với V là tổng tư bản khả biến.
+    <p>Nếu từng công nhân tạo ra cùng một lượng m, có thể tính tổng khối lượng bằng lượng m của một công nhân nhân với số công nhân. Tỷ suất giữ nguyên nhưng quy mô sản xuất lớn hơn thì M tăng.</p>`,
+  ask:"Một công nhân tạo ra 15 USD giá trị thặng dư. Nếu 10 công nhân cùng mức đó, M là bao nhiêu?",
+  opts:{A:["15 USD","Hà Vy: «15 USD là phần của một công nhân. Nhà máy giờ có mười người.»"],
+        B:["100 USD","Hà Vy: «Con số 100 không xuất phát từ dữ kiện nào. 15 × 10 không ra 100.»"],
+        C:["150 USD","Hà Vy: «10 × 15 = 150 USD. Dự toán được chấp nhận.»"],
+        D:["1.500 USD","Hà Vy: «1.500 USD là nhân thêm 10 lần nữa — các vị nhầm đơn vị rồi.»"]},
+  correct:"C", ans:"C — 10 × 15 = 150 USD", hint:"Tính tổng theo số công nhân và giá trị thặng dư mỗi người.",
+  fb:"Tỷ suất không đổi, nhưng 10 người tạo ra tổng cộng <b>150 USD</b> giá trị thặng dư.",
+  after:[dir("Thanh tra đóng dấu THÔNG QUA KIỂM TOÁN. Các đội nhận giấy mời dự cuộc đua công nghiệp cuối cùng."),
+    {who:"vy",t:"Các tập đoàn đủ điều kiện bước vào vòng cạnh tranh chiến lược. Ba chuyên gia sẽ đưa ra ba con đường gia tăng giá trị thặng dư. Quyết định cuối cùng có thể <b>đảo ngược thứ hạng</b>!"}]},
+
+/* ---------- HỒI 7 · Anh Tú · Văn Đạt · Phương Hoa ---------- */
+{ block:7, npc:"tu", tag:"Biến cố 1 · Đơn hàng khẩn cấp", title:"Chiến lược kéo dài ngày lao động",
+  event:say("tu","Các vị đã gần trở thành ông trùm ngành sợi bông, nhưng một tập đoàn đối thủ vừa <b>tuyên chiến</b>! Hãy cân nhắc ba chiến lược cuối — mỗi quyết định có thể khiến bảng xếp hạng đổi chủ.",
+    "<b>Biến cố 1 / Đơn hàng khẩn cấp.</b> Đơn hàng tăng đột ngột. Giả định nhà máy giữ nguyên năng suất và thời gian lao động tất yếu là <b>4 giờ</b>, nhưng ngày lao động tăng từ <b>8 lên 10 giờ</b>."),
+  know:`<b>Giá trị thặng dư tuyệt đối</b> được tạo ra bằng cách <b>kéo dài ngày lao động</b> vượt quá thời gian lao động tất yếu, trong khi năng suất lao động, giá trị sức lao động và thời gian tất yếu không đổi.
+    <p>Nếu thời gian tất yếu là 4 giờ, ngày lao động 8 giờ sẽ có 4 giờ thặng dư. Khi kéo dài lên 10 giờ, phần thặng dư được tính bằng 10 trừ 4; từ đó dùng <b>m′ = thời gian thặng dư / thời gian tất yếu × 100%</b>.</p>`,
+  ask:"Trong tình huống trên, phương pháp và tỷ suất m′ mới là gì?",
+  opts:{A:["Giá trị thặng dư tuyệt đối, m′ = 150%.","Anh Tú: «Chính xác. Ngày lao động dài thêm, thời gian tất yếu giữ nguyên 4 giờ → thời gian thặng dư 6 giờ → m′ = 6/4 = 150%.»"],
+        B:["Giá trị thặng dư tương đối, m′ = 150%.","Anh Tú: «Con số đúng, phương pháp sai. Tương đối là rút ngắn thời gian tất yếu — nhưng ở đây tất yếu vẫn là 4 giờ, chỉ có ngày lao động dài ra.»"],
+        C:["Giá trị thặng dư tuyệt đối, m′ = 300%.","Anh Tú: «Phương pháp đúng, con số sai. Thời gian thặng dư 6 giờ chia thời gian tất yếu 4 giờ là 150%, không phải 300%.»"],
+        D:["Giá trị thặng dư siêu ngạch, m′ = 150%.","Anh Tú: «Siêu ngạch đòi hỏi giá trị cá biệt thấp hơn giá trị xã hội nhờ năng suất cao hơn. Ở đây năng suất không đổi.»"]},
+  correct:"A", ans:"A — (6/4) × 100% = 150%", hint:"Thời gian thặng dư bằng 10 − 4 = 6 giờ.",
+  fb:"Đây là <b>giá trị thặng dư tuyệt đối</b> do kéo dài ngày lao động. Ví dụ dùng để phân tích lý luận lịch sử, không cổ vũ vi phạm luật lao động.",
+  after:[]},
+
+{ block:7, npc:"dat", tag:"Biến cố 2 · Cuộc cách mạng năng suất", title:"Chiến lược năng suất",
+  event:say("dat","<b>Đối thủ đã thay đổi cuộc chơi!</b> Năng suất lao động xã hội trong các ngành sản xuất tư liệu sinh hoạt tăng, khiến giá trị sức lao động giảm. Ngày lao động vẫn <b>8 giờ</b> nhưng thời gian lao động tất yếu chỉ còn <b>2 giờ</b>."),
+  know:`<b>Giá trị thặng dư tương đối</b> được tạo ra khi <b>thời gian lao động tất yếu được rút ngắn</b>, làm tăng thời gian lao động thặng dư trong điều kiện độ dài ngày lao động không đổi (hoặc có thể rút ngắn).
+    <p>Để làm giảm giá trị sức lao động, năng suất lao động xã hội phải tăng trong các ngành sản xuất tư liệu sinh hoạt và các ngành sản xuất tư liệu sản xuất cho những ngành đó. Với ngày 8 giờ, nếu thời gian tất yếu còn 2 giờ thì giờ thặng dư là 8 trừ 2.</p>`,
+  ask:"Xác định phương pháp và tỷ suất m′ phù hợp với tình huống.",
+  opts:{A:["Giá trị thặng dư tương đối, m′ = 300%.","Văn Đạt: «Chính xác. Ngày lao động không đổi, thời gian tất yếu rút từ 4 xuống 2 giờ → thặng dư 6 giờ → m′ = 6/2 = 300%.»"],
+        B:["Giá trị thặng dư tuyệt đối, m′ = 300%.","Văn Đạt: «Con số đúng, phương pháp sai. Tuyệt đối phải kéo dài ngày lao động — mà ngày lao động vẫn là 8 giờ.»"],
+        C:["Giá trị thặng dư tương đối, m′ = 150%.","Văn Đạt: «Phương pháp đúng, con số sai. Thặng dư 6 giờ chia tất yếu 2 giờ là 300%.»"],
+        D:["Giá trị thặng dư tuyệt đối, m′ = 100%.","Văn Đạt: «Ngày lao động không dài thêm nên không phải tuyệt đối. Và 100% là con số cũ, trước khi năng suất xã hội tăng.»"]},
+  correct:"A", ans:"A — (6/2) × 100% = 300%", hint:"Ngày lao động không đổi; thời gian thặng dư = 8 − 2 = 6 giờ.",
+  fb:"Ngày lao động không kéo dài; giờ tất yếu giảm, giờ thặng dư tăng, nên đây là <b>giá trị thặng dư tương đối</b>.",
+  after:[]},
+
+{ block:7, npc:"hoa", star:true, tag:"Biến cố 3 · Thông tin tuyệt mật", title:"Giải mã lợi thế công nghệ",
+  event:say("hoa","<b>THÔNG TIN TUYỆT MẬT!</b> Một công ty cải tiến dây chuyền khiến giá trị cá biệt mỗi sản phẩm chỉ còn <b>8 USD</b>, trong khi giá trị xã hội vẫn là <b>10 USD</b>. Khi bán theo giá trị xã hội, họ đang có lợi thế gì?"),
+  know:`<b>Giá trị thặng dư siêu ngạch</b> xuất hiện khi một xí nghiệp cải tiến kỹ thuật và tăng <b>năng suất lao động cá biệt</b>, làm giá trị cá biệt của hàng hóa thấp hơn giá trị xã hội.
+    <p>Đây là lợi thế có thể chỉ tạm thời đối với từng doanh nghiệp vì đối thủ có thể bắt kịp, nhưng xét trên toàn xã hội tư bản, hiện tượng này tồn tại thường xuyên và thúc đẩy cải tiến kỹ thuật. Trong ví dụ, chênh lệch giữa 10 USD và 8 USD là <b>2 USD/sản phẩm</b>.</p>`,
+  ask:"Phần chênh lệch mà công ty có năng suất riêng cao hơn đang thu được thuộc trường hợp nào?",
+  opts:{A:["Giá trị thặng dư tuyệt đối.","Phương Hoa: «Không ai kéo dài ngày lao động cả. Lợi thế này đến từ dây chuyền, không phải từ thêm giờ làm.»"],
+        B:["Giá trị thặng dư siêu ngạch.","Phương Hoa: «Chính xác! Đây là giá trị thặng dư siêu ngạch — phần chênh lệch giữa giá trị xã hội và giá trị cá biệt.»"],
+        C:["Giá trị thặng dư tương đối do năng suất toàn xã hội tăng đồng loạt.","Phương Hoa: «Năng suất chỉ tăng ở riêng một doanh nghiệp. Nếu toàn xã hội cùng tăng, giá trị xã hội đã giảm theo và phần chênh 2 USD không còn.»"],
+        D:["Chỉ đơn thuần là bán đắt hơn giá trị xã hội.","Phương Hoa: «Doanh nghiệp bán đúng bằng giá trị xã hội 10 USD, không bán đắt hơn. Phần 2 USD đến từ năng suất cá biệt cao hơn.»"]},
+  correct:"B", ans:"B", hint:"Năng suất cá biệt của doanh nghiệp cao hơn mức xã hội.",
+  fb:"Giá trị cá biệt 8 USD thấp hơn giá trị xã hội 10 USD nhờ ưu thế riêng, nên đây là <b>giá trị thặng dư siêu ngạch</b>.",
+  after:[dir("Tiếng chuông kết thúc. Trọng tài chốt bảng vốn, các đội niêm phong hồ sơ nhà máy.")]}
+];
+
+const BLOCKS=[
+ {n:1,name:"Thành lập đế chế",time:"6 phút",cast:["giang"],goal:"Từ lưu thông hàng hóa đến công thức chung của tư bản; tìm mâu thuẫn trong lưu thông.",scene:"Tiếng chuông sàn giao dịch. Giang bước ra cầm hợp đồng và con dấu ĐỦ ĐIỀU KIỆN ĐẦU TƯ."},
+ {n:2,name:"Cuộc tuyển dụng định mệnh",time:"6 phút",cast:["chau"],goal:"Khái niệm hàng hóa sức lao động, hai điều kiện, hai thuộc tính và các bộ phận giá trị.",scene:"Tiếng còi nhà máy. Châu xuất hiện với ba bộ hồ sơ ứng viên và tấm biển SỞ LAO ĐỘNG."},
+ {n:3,name:"Nhà máy chạy đua với thời gian",time:"8 phút",cast:["duc","chau"],goal:"Tính giá trị sản phẩm và nhận biết phần giá trị thặng dư do lao động sống tạo ra.",scene:"Màn hình đồng hồ 08:00. Minh Đức chạy ra cầm đơn hàng: 100 KG SỢI / GIAO TRONG NGÀY."},
+ {n:4,name:"Cuộc khủng hoảng tài chính",time:"6 phút",cast:["klinh","mlinh"],goal:"Tư bản bất biến/khả biến; tiền công; lao động quản lý.",scene:"Chuông cảnh báo. Khánh Linh ôm sổ kế toán có hai cột C và V bước vào."},
+ {n:5,name:"Nhà máy trước nguy cơ phá sản",time:"6 phút",cast:["duong"],goal:"Tuần hoàn/chu chuyển của tư bản, tốc độ chu chuyển, tư bản cố định và lưu động.",scene:"Tùng Dương cầm phiếu TỒN KHO KHẨN CẤP chạy ra, chỉ lên bản đồ luân chuyển hàng."},
+ {n:6,name:"Cuộc kiểm toán bất ngờ",time:"6 phút",cast:["vy"],goal:"Bản chất kinh tế – xã hội; tỷ suất và khối lượng giá trị thặng dư.",scene:"Tiếng gõ cửa. Hà Vy bước vào với thẻ THANH TRA CÔNG NGHIỆP và tập hồ sơ niêm phong."},
+ {n:7,name:"Cuộc chiến giành ngôi vương",time:"9 phút",cast:["tu","dat","hoa"],goal:"Ba phương pháp sản xuất giá trị thặng dư: tuyệt đối, tương đối, siêu ngạch.",scene:"Nhạc cao trào. Màn hình: BA BIẾN CỐ CHIẾN LƯỢC CUỐI CÙNG. Tú, Đạt, Hoa đứng thành hội đồng."}
+];
+const TIMEPLAN=[["Giới thiệu cốt truyện / luật / vai","3 phút","Quỳnh Giang"],["Hồi 1 – Thành lập đế chế","6 phút","Quỳnh Giang"],
+ ["Hồi 2 – Tuyển dụng","6 phút","Minh Châu"],["Hồi 3 – Sản xuất","8 phút","Minh Đức (Minh Châu hỗ trợ)"],
+ ["Hồi 4 – Khủng hoảng tài chính","6 phút","Khánh Linh · Ngọc Linh"],["Hồi 5 – Chu chuyển","6 phút","Tùng Dương"],
+ ["Hồi 6 – Kiểm toán","6 phút","Hà Vy"],["Hồi 7 – Cạnh tranh","9 phút","Anh Tú · Văn Đạt · Phương Hoa"],
+ ["Phiên họp cuối · trao giải & tổng kết","4 phút","Quỳnh Giang trao giải · Anh Tú tổng kết"],["Đệm chuyển cảnh","1 phút","—"]];
+
+const SUMMARY=[
+ ["01","T–H–T′","Công thức chung của tư bản: tiền đẻ ra tiền"],["02","Lưu thông","Mua bán không tự tạo ra giá trị mới"],
+ ["03","Sức lao động","Tự do thân thể + không có tư liệu sản xuất"],["04","Giá trị SLĐ","Sinh hoạt + đào tạo + nuôi con"],
+ ["05","Giá trị SP","Giá trị TLSX chuyển vào + giá trị mới"],["06","Giá trị thặng dư","136 − 121 = 15 USD"],
+ ["07","c và v","Bất biến (TLSX) và khả biến (SLĐ)"],["08","Tiền công","Giá cả sức lao động, không phải giá cả lao động"],
+ ["09","Tuần hoàn","Mua → Sản xuất → Bán · 12 ÷ 3 = 4 vòng/năm"],["10","Hao mòn","Hữu hình (vật chất) và vô hình (máy mới rẻ hơn)"],
+ ["11","Tỷ suất m′","m/v × 100% = 100%"],["12","Khối lượng M","10 × 15 = 150 USD"],
+ ["13","Tuyệt đối","Kéo dài ngày lao động → m′ = 150%"],["14","Tương đối","Rút ngắn thời gian tất yếu → m′ = 300%"],
+ ["15","Siêu ngạch","Giá trị xã hội − giá trị cá biệt = 2 USD"]];
+
+/* ========================= STATE ========================= */
+const LS="cq.v4";
+let S={started:false,i:0,line:0,slate:true,rs:{}};
+function save(){ try{ localStorage.setItem(LS,JSON.stringify({sfx:AU.sfx,voice:AU.voice,rate:AU.rate,pitch:AU.pitch,engine:AU.engine,apiKey:AU.apiKey,voiceUri:AU.voiceUri})); }catch(e){} }
+(function(){ try{ const r=JSON.parse(localStorage.getItem(LS)||"{}"); if(typeof r.sfx==="boolean") AU.sfx=r.sfx; if(typeof r.voice==="boolean") AU.voice=r.voice; if(RATES.includes(r.rate)) AU.rate=r.rate; if(typeof r.pitch==="number") AU.pitch=r.pitch; if(typeof r.engine==="string") AU.engine=r.engine; if(typeof r.apiKey==="string") AU.apiKey=r.apiKey; if(typeof r.voiceUri==="string") AU.voiceUri=r.voiceUri; }catch(e){} })();
+const app=document.getElementById("app");
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+const fmt=n=>(n<0?"−":"")+Math.abs(n).toLocaleString("vi-VN");
+const pad=n=>String(n).padStart(2,"0");
+
+/* ========================= LUẬT ĐIỂM THEO THỜI GIAN =========================
+   Vòng 1 · Tự quyết (30 giây): đúng = 100 + 50 × (giây còn lại / 30) → +100…+150; sai −50.
+   Vòng 2 · Sau khi mở Mật báo (15 giây): đúng = 50 + 25 × (giây còn lại / 15) → +50…+75; sai −100.
+   Không trả lời: 0. Điểm luôn tính lại từ các phiếu đã chốt, nên sửa phiếu không bị lệch. */
+const P1=30, P2=15;
+function scoreOf(b,correct){ if(!b||!b.pick) return null; const ok=b.pick===correct;
+  if(b.phase===2) return ok?50+Math.round(25*Math.max(0,Math.min(P2,b.t||0))/P2):-100;
+  return ok?100+Math.round(50*Math.max(0,Math.min(P1,b.t||0))/P1):-50; }
+const GLS="cq.groups.v4";
+let G={start:1000,groups:[],picks:{},settled:{}};
+function gsave(){ try{ localStorage.setItem(GLS,JSON.stringify(G)); }catch(e){} }
+(function(){ try{ const r=JSON.parse(localStorage.getItem(GLS)||"null"); if(r&&Array.isArray(r.groups)) G=Object.assign(G,r); }catch(e){}
+  if(!G.groups.length) G.groups=[1,2,3,4].map(n=>({id:"g"+n,name:"Đội "+n})); })();
+function newGid(){ let i=1; while(G.groups.some(g=>g.id==="g"+i)) i++; return "g"+i; }
+function getPick(ri,gid){ return (G.picks[ri]||{})[gid]||{pick:null,phase:null,t:null}; }
+function setPick(ri,gid,v){ G.picks[ri]=G.picks[ri]||{}; G.picks[ri][gid]=v; gsave(); }
+function delta(ri,gid){ return scoreOf(getPick(ri,gid),ROUNDS[ri].correct); }
+function capital(gid,before){ const lim=before==null?ROUNDS.length:before; let p=G.start;
+  for(let r=0;r<lim;r++){ if(!G.settled[r]) continue; const d=delta(r,gid); if(d!=null) p+=d; } return p; }
+function standings(){ return G.groups.map(g=>({g,p:capital(g.id)})).sort((a,b)=>b.p-a.p); }
+function settleRound(ri){ G.settled[ri]=true; gsave(); }
+
+/* ========================= ĐỒNG HỒ: đọc câu hỏi → 30 giây → Mật báo → 15 giây ========================= */
+let TM=null, TRI=-1;
+function rs(ri){ return S.rs[ri]||(S.rs[ri]={phase:"wait",left:P1}); }
+function stopTick(){ if(TM){ clearInterval(TM); TM=null; } TRI=-1; }
+function questionText(ri){ const r=ROUNDS[ri];
+  /* câu hỏi đọc theo câu; các phương án gộp thành cụm ≤ 170 ký tự để đọc liền mạch mà không bị trình duyệt cắt */
+  const parts=forSpeech(r.ask).split(/(?<=[.!?])\s+/).filter(Boolean);
+  let chunk="";
+  Object.keys(r.opts).forEach(k=>{ const o=`${k}: ${forSpeech(r.opts[k][0]).replace(/[.]$/,"")}`;
+    if(chunk&&(chunk.length+o.length)>170){ parts.push(chunk+"."); chunk=o; } else chunk=chunk?chunk+"; "+o:o; });
+  if(chunk) parts.push(chunk+".");
+  return parts; }
+function beginReading(ri){ const R=rs(ri); R.phase="reading"; R.left=P1;
+  const spoke=AU.speak(questionText(ri),()=>{ const Q=rs(ri); if(Q.phase==="reading"){ startP1(ri); if(curRound()===ri) stage(); } });
+  R.noVoice=!spoke; if(!spoke) startP1(ri); }
+function startP1(ri){ AU.hush(); const R=rs(ri); R.phase="p1"; R.left=P1; AU.bell(); runTick(ri); }
+function openThu(ri){ const R=rs(ri); R.phase="p2"; R.left=P2; AU.stamp(); runTick(ri); }
+function closeRound(ri){ const R=rs(ri); if(R.phase!=="wait") R.phase="closed"; R.left=0; if(TRI===ri) stopTick(); }
+function runTick(ri){ stopTick(); TRI=ri;
+  TM=setInterval(()=>{ const R=rs(ri); R.left--;
+    if(R.left<=0){ R.left=0;
+      if(R.phase==="p1"){ AU.bad(); openThu(ri); if(curRound()===ri) stage(); return; }
+      if(R.phase==="p2"){ AU.bad(); closeRound(ri); if(curRound()===ri) stage(); return; } }
+    paintClock(ri); if(R.left<=5) AU.tick(); },1000);
+  paintClock(ri); }
+function paintClock(ri){ const R=rs(ri), tot=R.phase==="p2"?P2:P1;
+  document.querySelectorAll("[data-clock]").forEach(el=>{ el.textContent=R.left; el.classList.toggle("hot",R.left<=5&&(R.phase==="p1"||R.phase==="p2")); });
+  document.querySelectorAll("[data-bar]").forEach(el=>el.style.width=(R.left/tot*100)+"%"); }
+function curRound(){ const s=SL[S.i]; return s&&s.t==="round"&&s.step===1?s.i:-1; }
+
+/* ========================= PHIẾU (cột phải) ========================= */
+function sideHead(eb,title,extra){ return `<div class="sh"><div><p class="eyebrow">${eb}</p><h3>${title}</h3>${extra||""}</div>
+  <div class="sicons"><button class="ib" id="gmanage" title="Sửa đội (phím G)" aria-label="Sửa đội">✎</button>
+    <button class="ib" id="gledger" title="Bảng điểm (phím L)" aria-label="Bảng điểm">☰</button></div></div>`; }
+const legendHTML=`<div class="slegend"><span>⏱ Tự quyết: đúng <b class="p">+100…+150</b> · sai <b class="m">−50</b></span>
+  <span>✉ Sau Mật báo: đúng <b class="p">+50…+75</b> · sai <b class="m">−100</b></span><span>Trả lời càng sớm càng nhiều điểm.</span></div>`;
+function betPanel(ri,step){
+  if(ri==null){
+    return `<aside class="side" id="gpanel">${sideHead("Sổ vốn các tập đoàn","Xếp hạng")}
+      <ol class="rank">${standings().map((x,i)=>`<li class="${i===0?"top":""}"><span class="rk">${i+1}</span><span class="rn">${esc(x.g.name)}</span><span class="rv">${fmt(x.p)}</span></li>`).join("")}</ol>
+      ${legendHTML}</aside>`;
+  }
+  const r=ROUNDS[ri], keys=Object.keys(r.opts), R=rs(ri);
+  const done=!!G.settled[ri], fixing=!done&&step>=2;
+  const np=G.groups.filter(g=>getPick(ri,g.id).pick).length;
+  const cards=G.groups.map(g=>{
+    const b=getPick(ri,g.id), d=done?delta(ri,g.id):null, st=d==null?"":d>0?"ok":"no";
+    let lock=done;
+    if(!done&&!fixing) lock = !(R.phase==="p1"||R.phase==="p2") || (R.phase==="p2"&&b.pick&&b.phase===1);
+    const chip=b.pick?`<span class="tchip ${b.phase===2?"ph2":""}" title="${b.phase===2?"Trả lời sau khi mở Mật báo":"Trả lời trước Mật báo"} — còn ${b.t} giây">${b.phase===2?"✉":"⏱"} ${b.t}s</span>`:"";
+    const fix=fixing?`<div class="tfix"><button class="hb" data-ph="${g.id}" aria-pressed="${b.phase===2}" title="Chuyển giữa trước / sau Mật báo">✉</button>
+        <label>còn <input type="number" min="0" max="${b.phase===2?P2:P1}" value="${b.t??0}" data-t="${g.id}" aria-label="Số giây còn lại khi ${esc(g.name)} trả lời"> s</label></div>`:"";
+    return `<div class="team ${st}">
+      <div class="tt"><span class="tn">${esc(g.name)}</span><span class="tc">${fmt(done?capital(g.id,ri+1):capital(g.id,ri))}</span></div>
+      <div class="tp"><span class="seg">${keys.map(k=>`<button data-p="${g.id}|${k}" aria-pressed="${b.pick===k}" ${lock?"disabled":""} aria-label="${esc(g.name)} chọn ${k}">${k}</button>`).join("")}</span>
+        ${chip}<span class="td ${st}">${d==null?"":(d>0?"+":"−")+Math.abs(d)}</span></div>${fix}</div>`;}).join("");
+  const live=(R.phase==="p1"||R.phase==="p2")&&!done
+    ? `<span class="pill clock ${R.phase}">${R.phase==="p1"?"⏱ Tự quyết":"✉ Mật báo"} · <b data-clock>${R.left}</b>s</span>` : "";
+  let foot;
+  if(done) foot=`<span>Đáp án <b>${r.correct}</b> · đã cộng/trừ vốn.</span><button class="btn sm ghost" id="gundo">↩ Sửa lại phiếu</button>`;
+  else if(fixing) foot=`<span>Đang sửa phiếu QĐ ${ri+1}: chọn lại phương án, ✉ = trả lời sau Mật báo, chỉnh số giây còn lại.</span><button class="btn sm primary" id="gsettle">✓ Tính lại vốn</button>`;
+  else if(R.phase==="wait"||R.phase==="reading") foot=`<span>Phiếu mở khi đồng hồ 30 giây bắt đầu.</span>`;
+  else if(R.phase==="p1") foot=`<span>Đội nào giơ phiếu thì bấm ngay đáp án của đội đó — hệ thống ghi lại số giây còn lại.</span>`;
+  else if(R.phase==="p2") foot=`<span>Chỉ đội <b>chưa trả lời</b> mới chọn được. Đội đã chốt trước Mật báo giữ nguyên.</span>`;
+  else foot=`<span>🔒 <b>Hết giờ — phiếu đã khoá.</b> Bấm “Công bố kết quả”.</span>`;
+  return `<aside class="side" id="gpanel">
+    ${sideHead("Phiếu quyết định",`QĐ ${pad(ri+1)}`,`<div class="pills"><span class="pill ${np===G.groups.length?"full":""}">${np}/${G.groups.length} đội đã chọn</span>${live}</div>`)}
+    <div class="teams">${cards}</div>
+    <div class="sfoot">${foot}</div>
+    ${legendHTML}
+  </aside>`;
+}
+function refreshSide(ri,step){
+  const el=document.getElementById("gpanel"); if(!el) return stage();
+  el.outerHTML=betPanel(ri,step); wireGroups(ri,step); paintClock(ri);
+}
+function wireGroups(ri,step){
+  const re=()=> ri==null?stage():refreshSide(ri,step);
+  app.querySelectorAll("[data-p]").forEach(el=>el.onclick=()=>{ const [g,k]=el.dataset.p.split("|"), b=getPick(ri,g), R=rs(ri);
+    const fixing=!G.settled[ri]&&step>=2;
+    if(fixing) setPick(ri,g, b.pick===k?{pick:null,phase:null,t:null}:{pick:k,phase:b.phase||2,t:b.t??0});
+    else if(R.phase==="p1") setPick(ri,g, b.pick===k?{pick:null,phase:null,t:null}:{pick:k,phase:1,t:R.left});
+    else if(R.phase==="p2"){ if(b.pick&&b.phase===1) return; setPick(ri,g, b.pick===k?{pick:null,phase:null,t:null}:{pick:k,phase:2,t:R.left}); }
+    else return;
+    AU.flip(); re(); });
+  app.querySelectorAll("[data-ph]").forEach(el=>el.onclick=()=>{ const g=el.dataset.ph, b=getPick(ri,g); const ph=b.phase===2?1:2;
+    setPick(ri,g,{pick:b.pick,phase:ph,t:Math.min(b.t??0,ph===2?P2:P1)}); AU.chip(); re(); });
+  app.querySelectorAll("[data-t]").forEach(el=>el.onchange=()=>{ const g=el.dataset.t, b=getPick(ri,g), mx=b.phase===2?P2:P1;
+    setPick(ri,g,Object.assign({},b,{t:Math.max(0,Math.min(mx,Math.round(Number(el.value)||0)))})); re(); });
+  const s=document.getElementById("gsettle"); if(s) s.onclick=()=>{ settleRound(ri); AU.stamp(); stage(); };
+  const u=document.getElementById("gundo"); if(u) u.onclick=()=>{ delete G.settled[ri]; gsave(); AU.flip(); stage(); };
+  const m=document.getElementById("gmanage"); if(m) m.onclick=openGroups;
+  const l=document.getElementById("gledger"); if(l) l.onclick=openLedger;
+}
+function openGroups(){
+  const d=document.getElementById("dlg"), b=document.getElementById("dlgBody");
+  const draw=()=>{
+    b.innerHTML=`<h2>Các tập đoàn</h2>
+      <p class="gmsg">Mỗi đội tự đặt tên công ty. Gõ tên trực tiếp vào ô.</p>
+      <div class="glist">${G.groups.map(g=>`<div class="gr">
+        <input type="text" data-n="${g.id}" value="${esc(g.name)}" aria-label="Tên đội">
+        <span class="vp" style="font-family:var(--mono);font-weight:600">${fmt(capital(g.id))}</span>
+        <button class="xbtn" data-del="${g.id}" aria-label="Xoá ${esc(g.name)}">✕</button></div>`).join("")}</div>
+      <div class="gform"><button class="btn" id="gadd">+ Thêm đội</button>
+        <label class="gmsg">Vốn khởi đầu <input class="gnum" type="number" id="gstart" min="100" step="100" value="${G.start}"></label></div>
+      <p class="gmsg">Dữ liệu lưu trên máy này.</p>
+      <div class="gform"><button class="btn" id="dclose">Đóng</button>
+        <button class="btn" id="greset" style="border-color:var(--crit);color:var(--crit)">Xoá hết phiếu &amp; vốn</button></div>`;
+    b.querySelectorAll("[data-n]").forEach(el=>el.onchange=()=>{ const g=G.groups.find(x=>x.id===el.dataset.n);
+      if(g){ g.name=(el.value||"").trim()||g.name; gsave(); draw(); }});
+    b.querySelectorAll("[data-del]").forEach(el=>el.onclick=()=>{ G.groups=G.groups.filter(x=>x.id!==el.dataset.del);
+      Object.keys(G.picks).forEach(r=>{ delete G.picks[r][el.dataset.del]; });
+      if(!G.groups.length) G.groups=[{id:"g1",name:"Đội 1"}]; gsave(); draw(); });
+    document.getElementById("gadd").onclick=()=>{ G.groups.push({id:newGid(),name:"Đội "+(G.groups.length+1)}); gsave(); draw(); AU.chip(); };
+    document.getElementById("gstart").onchange=e=>{ G.start=Math.max(100,Math.round(Number(e.target.value)||1000)); gsave(); draw(); };
+    document.getElementById("greset").onclick=()=>{ G.picks={}; G.settled={}; S.rs={}; stopTick(); gsave(); draw(); };
+    document.getElementById("dclose").onclick=()=>{ d.close(); stage(); };
+  };
+  draw(); d.showModal();
+}
+function cellTxt(i,g){ const b=getPick(i,g.id); if(!b.pick) return null; const d=delta(i,g.id);
+  return {txt:`${b.pick}${b.phase===2?"✉":""} ${d>0?"+":""}${d}`, ok:d>0, sec:b.t}; }
+function exportText(){
+  const L=["CAPITAL QUEST — so von cac tap doan",""], real=ROUNDS.map((r,i)=>i).filter(i=>G.settled[i]);
+  L.push("Doi\t"+real.map(i=>"QD"+(i+1)).join("\t")+"\tVon");
+  G.groups.forEach(g=>{ L.push(g.name+"\t"+real.map(i=>{ const c=cellTxt(i,g); return c?`${c.txt} (${c.sec}s)`:"—"; }).join("\t")+"\t"+capital(g.id)); });
+  L.push("","(✉ = tra loi sau khi mo Mat thu; (Ns) = so giay con lai khi tra loi)","","Xep hang:");
+  standings().forEach((x,i)=>L.push(`${i+1}. ${x.g.name} — ${x.p} USD`));
+  return L.join("\n");
+}
+function openLedger(){
+  const d=document.getElementById("dlg"), b=document.getElementById("dlgBody"), all=ROUNDS.map((r,i)=>i);
+  b.innerHTML=`<h2>Bảng điểm</h2>
+    <div class="ldg"><table><thead><tr><th>Đội</th>${all.map(i=>`<th>${i+1}</th>`).join("")}<th>Vốn</th></tr></thead>
+      <tbody>${G.groups.map(g=>`<tr><td>${esc(g.name)}</td>${all.map(i=>{
+        if(!G.settled[i]) return `<td style="color:var(--muted)">·</td>`;
+        const c=cellTxt(i,g); if(!c) return `<td style="color:var(--muted)">—</td>`;
+        return `<td class="${c.ok?"pos":"neg"}" title="còn ${c.sec} giây">${c.txt}</td>`;
+      }).join("")}<td><b>${fmt(capital(g.id))}</b></td></tr>`).join("")}</tbody></table></div>
+    <p class="gmsg"><b>·</b> QĐ chưa chốt · <b>—</b> đội không trả lời · <b>✉</b> trả lời sau khi mở Mật báo. Rê chuột lên ô để xem số giây.</p>
+    <pre class="exp" id="expt">${esc(exportText())}</pre>
+    <div class="gform"><button class="btn primary" id="gcopy">Sao chép</button><button class="btn" id="dclose">Đóng</button><span class="gmsg" id="cpmsg"></span></div>`;
+  document.getElementById("gcopy").onclick=()=>{ const m=document.getElementById("cpmsg");
+    const sel=()=>{ try{ const rg=document.createRange(); rg.selectNodeContents(document.getElementById("expt"));
+      const s=getSelection(); s.removeAllRanges(); s.addRange(rg); m.textContent="Đã bôi đen — bấm Ctrl+C."; }catch(e){} };
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(exportText()).then(()=>{m.textContent="Đã sao chép."}).catch(sel); else sel(); };
+  document.getElementById("dclose").onclick=()=>d.close();
+  d.showModal();
+}
+
+/* ========================= SLIDES ========================= */
+function buildSlides(){ const out=[{t:"intro"}];
+  BLOCKS.forEach(b=>{ out.push({t:"block",b:b.n});
+    ROUNDS.forEach((r,i)=>{ if(r.block===b.n) for(let st=0;st<3;st++) out.push({t:"round",i,step:st}); }); });
+  out.push({t:"final"},{t:"wrap"},{t:"theend"}); return out; }
+const SL=buildSlides();
+function script(r,step){
+  if(step===0) return r.event;                         /* 01: NPC thông báo biến cố (kiến thức hiện trên bảng) */
+  if(step===1) return [];                              /* 02: câu hỏi — máy đọc */
+  return [{who:r.npc,t:r.fb},...(r.after||[])];        /* 03: phản hồi ngắn + chuyển cảnh */
+}
+
+function segments(lines){ const out=[];
+  lines.forEach(l=>{ const last=out[out.length-1];
+    if(l.dir){ if(last&&last.dir) last.ts.push(l.t); else out.push({dir:true,ts:[l.t]}); return; }
+    if(last&&!last.dir&&last.who===l.who&&last.as===l.as) last.ts.push(l.t); else out.push({who:l.who,as:l.as,ts:[l.t]}); });
+  return out; }
+
+function render(){ if(!S.started) return home(); return stage(); }
+const idChip=k=>`<span class="mssv">${CAST[k].id}</span>`;
+/* nhãn dưới nhân vật trên sân khấu: vai NPC trong game */
+const npcRole=(k,block)=> k==="chau"&&block===3 ? "Đại diện công nhân" : CAST[k].role;
+function npcCard(k,withNo){ const c=CAST[k];
+  return `<div class="npc">${withNo?`<span class="no">${c.no}</span>`:""}${portrait(k)}
+    <div><b>${c.name}</b>${idChip(k)}${withNo?`<span>${c.role}${c.sub?` · ${c.sub}`:""}</span>`:""}<i>${c.seg}</i></div></div>`; }
+/* dải "Người trình bày" ngay trên nút Lùi / Tiếp */
+function presenters(cast,now){
+  if(!cast||!cast.length) return "";
+  const on=Array.isArray(now)?now:[now];
+  return `<div class="presenters"><span class="plabel">Người trình bày</span>${cast.map(k=>`<div class="pchip ${on.includes(k)?"on":""}">${portrait(k)}<b>${CAST[k].name}</b>${idChip(k)}</div>`).join("")}</div>`;
+}
+
+function home(){
+  app.className=""; stopTick(); AU.hush(); S.lastView="";
+  app.innerHTML=`<div class="wrap">
+    <div class="hero">${gearSVG("deco gearA",14)}${gearSVG("deco gearB",9)}${skylineSVG()}
+      <p class="eyebrow">Kịch bản nhập vai doanh nghiệp · 7 hồi · 15 quyết định</p>
+      <h1>Capital Quest<br><em>Đế Chế Sợi Bông</em></h1>
+      <p class="sub">Manchester, năm 1880 — thế giới lịch sử giả tưởng. Chương 3 – Giá trị thặng dư trong nền kinh tế thị trường.</p>
+      <div class="srcq" style="margin-top:16px;grid-template-columns:1fr"><div>
+        <q>Thưa các chủ nhà máy, tôi giao cho mỗi tập đoàn 1.000 USD. Các vị sẽ tuyển người, mua nguyên liệu, chạy máy và cạnh tranh. Vốn có thể sinh sôi, nhưng một quyết định sai sẽ phải trả giá!</q>
+        <cite>— Chủ ngân hàng Lâm Thị Quỳnh Giang (HS194252)</cite></div></div>
+    </div>
+    <div class="modes">
+      <button class="mode" id="start"><span class="tag">Màn hình trình chiếu</span><b>Bắt đầu phiên họp</b>
+        <span>Mỗi quyết định 3 bước: <b>01</b> thuyết trình kiến thức mới → <b>02</b> câu hỏi (máy đọc, đồng hồ 30 giây) → <b>03</b> chốt đáp án &amp; giải thích ngắn. Bấm <b>→</b> để sang bước tiếp.</span></button>
+    </div>
+    <div class="rules">
+      <h2>Phân vai &amp; điều phối — 10/10 thành viên</h2>
+      <div class="npcgrid">${ORDER.map(k=>npcCard(k,true)).join("")}</div>
+    </div>
+    <div class="rules">
+      <h2>Cơ chế trả lời &amp; tính điểm</h2>
+      ${flowHTML()}
+      <div class="scoreline">
+        <div><span>Vốn ban đầu</span><b>1.000 USD</b></div>
+        <div><span>Trả lời trước Mật báo · đúng</span><b class="p">+100 → +150</b><span>100 + 50 × giây còn lại ÷ 30</span></div>
+        <div><span>Trả lời trước Mật báo · sai</span><b class="m">−50</b></div>
+        <div><span>Sau khi mở Mật báo · đúng</span><b class="p">+50 → +75</b><span>50 + 25 × giây còn lại ÷ 15</span></div>
+        <div><span>Sau khi mở Mật báo · sai</span><b class="m">−100</b></div>
+      </div>
+      <p class="quiet" style="font-size:14px;margin-top:10px">Ví dụ: đội trả lời đúng khi đồng hồ còn 24 giây được 100 + 50 × 24/30 = <b>+140 USD</b>. Đội chờ Mật báo rồi trả lời đúng khi còn 9 giây được 50 + 25 × 9/15 = <b>+65 USD</b>. Không trả lời: 0. Không đội nào bị loại.</p>
+    </div>
+    <div class="rules">
+      <h2>Ban điều hành của mỗi đội</h2>
+      <ul>
+        <li><span class="chip solid"></span><span><b>CEO</b> — chủ nhà máy; ký quyết định cuối cùng.</span></li>
+        <li><span class="chip solid"></span><span><b>CFO</b> — quản lý USD, tính toán và ghi sổ tài chính.</span></li>
+        <li><span class="chip"></span><span><b>HR Manager</b> — tuyển dụng và xử lý hợp đồng lao động.</span></li>
+        <li><span class="chip"></span><span><b>Production Manager</b> — quản lý máy móc và dây chuyền sản xuất.</span></li>
+        <li><span class="chip"></span><span><b>Business Strategist</b> — đề xuất chiến lược cạnh tranh.</span></li>
+        <li><span class="chip"></span><span><b>Workers’ Representative</b> — đại diện công nhân; phản biện các quyết định liên quan đến lao động.</span></li>
+      </ul>
+    </div>
+    <div class="rules">
+      <h2>Phân bổ thời gian</h2>
+      <div style="overflow-x:auto"><table class="sumtbl"><thead><tr><th>Phân đoạn</th><th>Thời gian</th><th>Người dẫn chính</th></tr></thead>
+        <tbody>${TIMEPLAN.map(r=>`<tr><td style="font-family:var(--body);color:var(--ink);font-weight:600;white-space:normal;width:auto">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")}
+        <tr><td style="font-family:var(--body);color:var(--ink);font-weight:800;width:auto">Tổng</td><td><b>≈ 55 phút</b></td><td>10 thành viên</td></tr></tbody></table></div>
+    </div>
+    <div class="rules">
+      <h2>Âm thanh &amp; Giọng đọc AI</h2>
+      <p class="quiet" style="font-size:14.5px">Máy đọc <b>câu hỏi và các phương án</b> — lời thoại do thành viên tự diễn. Bật/tắt đọc bằng phím <span class="kbd">V</span>, hiệu ứng và nhạc hoan hô bằng phím <span class="kbd">M</span>.</p>
+      
+      <div class="vcfg-card">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <span style="font-weight:700;font-size:14px">Kiểu giọng:</span>
+          <div class="vcfg-tabs">
+            <button id="mode-browser" class="${AU.engine==='browser'?'on':''}">🔊 Giọng máy (Nam trầm mô phỏng Adam)</button>
+            <button id="mode-elevenlabs" class="${AU.engine==='elevenlabs'?'on':''}">🎙 Giọng Adam AI (ElevenLabs Studio)</button>
+          </div>
+        </div>
+
+        <!-- Cấu hình Giọng máy / Web Speech -->
+        <div id="cfg-browser" class="vcfg-field" style="display:${AU.engine==='browser'?'flex':'none'}">
+          <label style="font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:6px">
+            Chọn giọng:
+            <select id="voicesel" style="max-width:320px"></select>
+          </label>
+          <label style="font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:6px">
+            Độ trầm giọng:
+            <select id="pitchsel">
+              <option value="0.80"${AU.pitch===0.80?' selected':''}>Rất trầm (Adam Deep · 80%)</option>
+              <option value="0.85"${(!AU.pitch||AU.pitch===0.85)?' selected':''}>Trầm ấm chuẩn (Adam Style · 85%)</option>
+              <option value="0.92"${AU.pitch===0.92?' selected':''}>Trầm nhẹ (92%)</option>
+              <option value="1.00"${AU.pitch===1.00?' selected':''}>Bình thường (100%)</option>
+            </select>
+          </label>
+        </div>
+
+        <!-- Cấu hình ElevenLabs API -->
+        <div id="cfg-elevenlabs" style="display:${AU.engine==='elevenlabs'?'grid':'none'};gap:8px">
+          <div class="vcfg-field">
+            <input type="password" id="elkey" placeholder="Dán API Key ElevenLabs (xi-api-key)..." value="${AU.apiKey||''}" style="flex:1 1 260px;font-family:var(--mono)">
+            <button class="btn sm primary" id="savekey">Lưu Key</button>
+            ${AU.apiKey?`<button class="btn sm ghost" id="clearkey">Xoá Key</button>`:''}
+          </div>
+          <p class="quiet" style="font-size:12.5px;line-height:1.45">
+            Voice ID: <code style="color:var(--brass)">pNInz6obpgDQGcFmaJgB</code> (Adam — Narrator chuẩn studio của ElevenLabs).<br>
+            Tự động cache âm thanh câu hỏi để tiết kiệm quota. Nếu chưa có API Key, bạn có thể lấy miễn phí tại <a href="https://elevenlabs.io" target="_blank" style="color:var(--brass);text-decoration:underline">elevenlabs.io</a> hoặc dùng <b>Giọng máy (Nam trầm)</b>.
+          </p>
+        </div>
+
+        <!-- Tốc độ & Thử giọng -->
+        <div class="vnote" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding-top:6px;border-top:1px dashed var(--line-strong)">
+          <span class="gmsg">Tốc độ đọc:</span>
+          <span class="seg ratepick">${RATES.map(x=>`<button data-rate="${x}" aria-pressed="${x===AU.rate}">${x}×</button>`).join("")}</span>
+          <button class="btn primary" id="vtest">▶ Thử giọng đọc</button>
+          <button class="btn" id="ctest">🎉 Thử nhạc hoan hô</button>
+          <span id="vstat" style="flex:1 1 220px;min-width:0;font-size:13.5px">Đang nạp danh sách giọng…</span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  populateVoiceList();
+  paintVoiceStat();
+
+  const bBrowser=document.getElementById("mode-browser");
+  const bEleven=document.getElementById("mode-elevenlabs");
+  const cBrowser=document.getElementById("cfg-browser");
+  const cEleven=document.getElementById("cfg-elevenlabs");
+  if(bBrowser&&bEleven){
+    bBrowser.onclick=()=>{
+      AU.engine="browser"; save();
+      bBrowser.classList.add("on"); bEleven.classList.remove("on");
+      if(cBrowser) cBrowser.style.display="flex";
+      if(cEleven) cEleven.style.display="none";
+      paintVoiceStat();
+    };
+    bEleven.onclick=()=>{
+      AU.engine="elevenlabs"; save();
+      bEleven.classList.add("on"); bBrowser.classList.remove("on");
+      if(cBrowser) cBrowser.style.display="none";
+      if(cEleven) cEleven.style.display="grid";
+      paintVoiceStat();
+    };
+  }
+
+  const vsel=document.getElementById("voicesel");
+  if(vsel){
+    vsel.onchange=()=>{
+      AU.voiceUri=vsel.value;
+      AU.loadVoices();
+      save();
+      paintVoiceStat();
+    };
+  }
+
+  const psel=document.getElementById("pitchsel");
+  if(psel){
+    psel.onchange=()=>{
+      AU.pitch=Number(psel.value);
+      save();
+      paintVoiceStat();
+    };
+  }
+
+  const savek=document.getElementById("savekey");
+  if(savek){
+    savek.onclick=()=>{
+      const k=(document.getElementById("elkey")?.value||"").trim();
+      AU.apiKey=k;
+      AU.engine="elevenlabs";
+      save();
+      paintVoiceStat();
+      render();
+      alert("Đã lưu ElevenLabs API Key thành công!");
+    };
+  }
+
+  const cleark=document.getElementById("clearkey");
+  if(cleark){
+    cleark.onclick=()=>{
+      AU.apiKey="";
+      AU.engine="browser";
+      save();
+      paintVoiceStat();
+      render();
+    };
+  }
+
+  document.getElementById("vtest").onclick=()=>{ AU.boot(); if(!AU.voice){ AU.voice=true; save(); }
+    AU.speak(questionText(0),()=>{}); setTimeout(paintVoiceStat,600); };
+  document.querySelectorAll("[data-rate]").forEach(b=>b.onclick=()=>{ AU.rate=Number(b.dataset.rate); save();
+    if(AU._audio) AU._audio.playbackRate=AU.rate;
+    document.querySelectorAll("[data-rate]").forEach(x=>x.setAttribute("aria-pressed",String(Number(x.dataset.rate)===AU.rate))); });
+  document.getElementById("ctest").onclick=()=>{ AU.boot(); if(!AU.sfx){ AU.sfx=true; save(); } AU.cheer(); };
+  document.getElementById("start").onclick=()=>{ AU.boot(); AU.chip(); S.started=true; S.i=0; S.line=0; S.slate=true; render(); window.scrollTo(0,0); };
+}
+
+function bar(extra){
+  const cur=SL[S.i]||SL[0], curIdx=cur.t==="round"?cur.i:-1;
+  const hoi=cur.t==="round"?ROUNDS[cur.i].block:cur.t==="block"?cur.b:null;
+  return `<div class="topbar">
+    <span class="brand">${gearSVG("",10)}<span class="t">Capital <em>Quest</em></span></span>
+    <div class="rail">${ROUNDS.map((r,i)=>{
+      const dn=SL.slice(0,S.i).some(s=>s.t==="round"&&s.i===i&&s.step===2);
+      return (i>0&&ROUNDS[i-1].block!==r.block?'<span class="gap"></span>':'')+`<i class="${i===curIdx?"now":dn?"done":""}"></i>`;}).join("")}</div>
+    ${hoi?`<span class="pos">Hồi ${hoi}</span>`:""}
+    <div class="spacer"></div>${extra||""}
+    <button class="btn sm primary only-narrow" id="tobet" title="Phiếu quyết định (phím B)">📝 Phiếu</button>
+    <button class="btn sm" id="trate" title="Tốc độ đọc câu hỏi — bấm để đổi (phím S)" aria-label="Tốc độ đọc">⏩ ${AU.rate}×</button>
+    <button class="btn sm ${AU.voice?"on":""}" id="tvoice" title="AI đọc câu hỏi (phím V)" aria-label="Giọng đọc câu hỏi">${AU.voice?"🗣":"🤐"}</button>
+    <button class="btn sm ${AU.sfx?"on":""}" id="tsfx" title="Hiệu ứng & nhạc hoan hô (phím M)" aria-label="Âm thanh">${AU.sfx?"🔊":"🔇"}</button>
+    <button class="btn ghost sm" id="home">Thoát</button>
+  </div>`;
+}
+function wireBar(){
+  document.getElementById("home").onclick=()=>{ stopTick(); AU.hush(); S.started=false; render(); window.scrollTo(0,0); };
+  document.getElementById("tsfx").onclick=()=>{ AU.sfx=!AU.sfx; save(); if(AU.sfx){AU.boot();AU.chip()} else AU.stopCheer(); stage(); };
+  document.getElementById("tvoice").onclick=()=>{ AU.voice=!AU.voice; save(); if(!AU.voice) AU.hush(); stage(); };
+  document.getElementById("trate").onclick=cycleRate;
+  const j=document.getElementById("jump"); if(j) j.onclick=openJump;
+  const tl=document.getElementById("topledger"); if(tl) tl.onclick=openLedger;
+  document.getElementById("tobet").onclick=scrollToBet;
+}
+function scrollToBet(){ const p=document.getElementById("gpanel"); if(p) p.scrollIntoView({behavior:"smooth",block:"start"}); }
+
+function optCard(r,k,mode){
+  const [txt,cs]=r.opts[k], isC=k===r.correct;
+  if(mode==="deal") return `<div class="opt deal"><span class="k">${k}</span><span>${txt}</span></div>`;
+  return `<div class="opt flip ${isC?"right":"wrong soft"}"><span class="seal ${isC?"ok":"no"}">${isC?"Phê duyệt":"Bác bỏ"}</span><span class="k">${k}</span><span>${txt}
+    <span class="verdict ${isC?"ok":"no"}">${isC?"✓ Phương án đúng":"✕ Phương án sai"}</span>
+    <span class="case"><span class="cw">Nếu chọn ${k}</span>${cs}</span></span></div>`;
+}
+function clockBox(ri,atEnd){
+  const R=rs(ri), r=ROUNDS[ri];
+  const hintOpen=R.phase==="p2"||(R.phase==="closed"&&R.thu);
+  if(R.phase==="p2") R.thu=true;
+  let title,msg,btn="";
+  if(R.phase==="wait"){ title="Mời các đội xem câu hỏi";
+    msg=`Bấm <b>→</b> (hoặc nút bên phải): máy đọc to câu hỏi, đọc xong đồng hồ <b>30 giây</b> tự chạy.`;
+    btn=`<button class="btn sm primary" id="tread">🔊 Đọc câu hỏi</button><button class="btn sm" id="tstart">▶ Chạy 30 giây ngay</button>`; }
+  else if(R.phase==="reading"){
+    const isEl=AU.engine==="elevenlabs"&&AU.apiKey;
+    title=isEl?"🎙 Giọng Adam AI đang đọc câu hỏi…":"🔊 Đang đọc câu hỏi (giọng trầm)…";
+    msg=R.noVoice?"Máy không có giọng đọc — bấm Bắt đầu để chạy đồng hồ.":"Đồng hồ 30 giây chạy ngay khi đọc xong.";
+    btn=`<button class="btn sm primary" id="tstart">▶ Bắt đầu 30 giây</button>`;
+  }
+  else if(R.phase==="p1"){ title="⏱ Vòng 1 · Tự quyết"; msg=`Trả lời càng sớm càng nhiều vốn: đúng <b>+100 → +150</b>, sai <b>−50</b>.`; btn=`<button class="btn sm" id="topen">✉ Mở Mật báo ngay</button>`; }
+  else if(R.phase==="p2"){ title="✉ Vòng 2 · Đã mở Mật báo"; msg=`Đội chưa trả lời chọn ngay: đúng <b>+50 → +75</b>, sai <b>−100</b>. Đội đã chốt ở vòng 1 giữ nguyên phiếu.`; }
+  else { title="🔒 Hết giờ — phiếu đã khoá"; msg=`Bấm <b>Công bố kết quả</b>.`; btn=`<button class="btn sm" id="treopen">↺ Mở lại 15 giây</button>`; }
+  const tot=R.phase==="p2"?P2:P1, showClock=true;
+  return `<div class="bet ph-${R.phase}"><div class="betrow"><h3>${title}</h3><span class="spacer"></span>${btn}
+      ${R.phase!=="wait"?`<button class="ib" id="treread" title="Đọc lại câu hỏi (phím R)" aria-label="Đọc lại câu hỏi">🔊</button>`:""}</div>
+    ${hintOpen?`<div class="hintbox"><b>✉ Mật báo:</b> ${r.hint}</div>`:""}
+    ${showClock?`<div class="timer"><span class="tnum mono ${R.phase==="p2"?"p2":""}" data-clock>${R.left}</span><span class="tbar ${R.phase==="p2"?"p2":""}"><i data-bar style="width:${R.left/tot*100}%"></i></span>
+      ${(R.phase==="p1"||R.phase==="p2")?`<button class="ib" id="treset" title="Đếm lại từ đầu" aria-label="Đếm lại">↺</button>`:""}</div>`:""}
+    <p class="gmsg">${msg}</p></div>`;
+}
+
+function stage(){
+  const sl=SL[S.i]||SL[0];
+  app.className="mcmode";
+  if(sl.t!=="round"||sl.step!==1) stopTick();
+  if(sl.t==="intro") return paintPanel(introPanel(), navRow("Vào Hồi 1",["giang"],"giang"));
+  if(sl.t==="block") return paintPanel(blockPanel(sl.b), navRow("Vào hồi",BLOCKS[sl.b-1].cast,BLOCKS[sl.b-1].cast[0]));
+  if(sl.t==="final") return paintPanel(finalPanel(), navRow("Mời Anh Tú tổng kết",["giang"],"giang"));
+  if(sl.t==="wrap") return paintPanel(wrapPanel(), navRow("The End",["tu"],"tu"));
+  if(sl.t==="theend") return paintPanel(endPanel(), navRow("Xong"));
+
+  const ri=sl.i, r=ROUNDS[ri], step=sl.step, bl=BLOCKS[r.block-1];
+  const segs=segments(script(r,step));
+  const keys=Object.keys(r.opts), R=rs(ri);
+  /* rời trang khi máy đang đọc dở → quay về trạng thái chờ */
+  if(step===1&&R.phase==="reading"&&!AU.speaking) R.phase="wait";
+
+  let boards=`<div class="scene">${icon(ACTICON[r.block-1])}<span class="tagline">${r.tag}</span><h2>Quyết định ${pad(ri+1)} — ${r.title}</h2></div>
+    <div class="steps">${["Thuyết trình kiến thức mới","Câu hỏi","Chốt đáp án &amp; giải thích ngắn"].map((t,i)=>`<span class="${i===step?"on":i<step?"done":""}">${pad(i+1)} / ${t}</span>`).join("")}</div>`;
+  if(step===0){
+    boards+=`<div class="know"><p class="eyebrow">01 / Thuyết trình kiến thức mới · ${CAST[r.npc].name} trình bày</p><div class="kbody">${r.know}</div></div>`;
+  } else if(step===1){
+    boards+=`<p class="ask2">${r.ask}</p><div class="opts g2">${keys.map(k=>optCard(r,k,"deal")).join("")}</div>`+clockBox(ri,true);
+  } else {
+    boards+=`<div class="ansbar"><span class="eyebrow">Đáp án</span><b>${r.ans}</b></div>`;
+    boards+=`<div class="opts g2">${keys.map(k=>optCard(r,k,"flip")).join("")}</div>`;
+    if(r.decode) boards+=decodeBox();
+  }
+  const talking=[...new Set(segs.filter(g=>!g.dir).map(g=>g.who))];
+  if(step<2&&!talking.includes(r.npc)) talking.push(r.npc);        /* người trình bày kiến thức / người hỏi */
+  const castNow=[...new Set([...bl.cast,...talking])];
+  const reading=step===1&&R.phase==="reading";
+  const firstSpk=segs.find(g=>!g.dir);
+  const col=reading?"var(--brass)":CAST[firstSpk?firstSpk.who:r.npc].col;
+  const segHTML=segs.map(g=>{
+    if(g.dir) return `<div class="dseg">${g.ts.map(t=>`<p class="sdir">[${t}]</p>`).join("")}</div>`;
+    const c=CAST[g.who];
+    return `<div class="dseg"><p class="who" style="color:${c.col}"><i style="background:${c.col}"></i><span class="spk">${c.name}</span>${idChip(g.who)}</p>
+      <div class="dtext">${g.ts.map(t=>`<p>${t}</p>`).join("")}</div></div>`; }).join("");
+  const showBox=segs.length||reading;
+  const vkey=`${S.i}`; app.classList.toggle("still",S.lastView===vkey); S.lastView=vkey;
+  app.innerHTML=`${bar(`<button class="btn sm ghost" id="topledger">Bảng điểm</button><button class="btn sm ghost" id="jump">QĐ ${pad(ri+1)} / 15 ▾</button>`)}
+  <div class="layout"><main class="main">
+    <div class="set"><div class="spotlight"></div>${gearSVG("deco gearA",14)}${gearSVG("deco gearB",9)}${lint()}
+      ${S.slate&&step===0?`<div class="slate"><p class="e">${r.star?"★ ":""}${r.tag}</p><div class="n">${pad(ri+1)}</div><p class="t">${r.title}</p></div>`:""}
+      <div class="boards">${boards}</div>
+      <div class="stageline">${skylineSVG()}${castNow.map(k=>`<div class="char ${talking.includes(k)?"speaking":""}">${portrait(k)}<span class="nm">${npcRole(k,r.block)}</span></div>`).join("")}</div>
+      ${showBox?`<div class="dbox merged ${reading?"isai":""}" id="dbox" role="button" tabindex="0" aria-live="polite" style="border-left-color:${col}">
+        ${reading?`<p class="who aiwho"><span class="aibadge">🔊 AI đang đọc câu hỏi</span></p>`:""}${segHTML}
+        <span class="nextcue">${nextLabel(sl)} ▸</span></div>`:`<div style="height:12px"></div>`}
+    </div>
+    ${navRow(nextLabel(sl),castNow,talking)}
+  </main>${betPanel(ri,step)}</div>`;
+  wireBar();
+
+  if(S.slate&&step===0){ AU.slate(); S.slate=false;
+    const card=app.querySelector(".slate"); if(card){ const kill=()=>{ try{card.remove()}catch(e){} };
+      card.addEventListener("animationend",kill,{once:true}); setTimeout(kill,800); } }
+
+  /* bước 02: lần bấm đầu = máy đọc câu hỏi; lần sau = công bố đáp án */
+  const advance=()=>{
+    if(step===1){ const Q=rs(ri);
+      if(Q.phase==="wait"){ S.guard=Date.now(); beginReading(ri); stage(); return; }
+      if(Date.now()-(S.guard||0)<1200) return; }
+    step1(1); };
+  const db=document.getElementById("dbox");
+  if(db){ db.onclick=advance; db.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();advance()} }; }
+  app.__advance=advance;
+  const on=(id,f)=>{ const el=document.getElementById(id); if(el) el.onclick=e=>{ e.stopPropagation(); f(); }; };
+  on("tread",advance);
+  on("tstart",()=>{ startP1(ri); stage(); });
+  on("topen",()=>{ openThu(ri); stage(); });
+  on("treset",()=>{ const Q=rs(ri); Q.left=Q.phase==="p2"?P2:P1; runTick(ri); AU.chip(); stage(); });
+  on("treopen",()=>{ openThu(ri); stage(); });
+  on("treread",()=>{ const Q=rs(ri); if(Q.phase==="reading") beginReading(ri); else AU.speak(questionText(ri),()=>{}); });
+
+  wireGroups(ri,step);
+  document.getElementById("prev").onclick=()=>step1(-1);
+  document.getElementById("next").onclick=advance;
+  if(step===1&&(R.phase==="p1"||R.phase==="p2")&&TRI!==ri) runTick(ri); else paintClock(ri);
+}
+function decodeBox(){
+  return `<div><p class="eyebrow" style="margin-bottom:8px">Báo cáo cuối ca vừa được giải mã</p>
+    <div class="decode"><div><b>136 USD</b><span>Giá trị 100 kg sợi</span></div><div><b>121 USD</b><span>Tư bản ứng trước</span></div><div><b>15 USD</b><span>Giá trị thặng dư m</span></div></div></div>`;
+}
+function navRow(lbl,cast,now){
+  return `${presenters(cast,now)}<div class="navrow">
+    <button class="btn" id="prev" ${S.i===0?"disabled":""}>← Lùi</button>
+    <button class="btn primary big" id="next" ${S.i>=SL.length-1?"disabled":""}>${lbl} →</button>
+    <span class="khint"><span><span class="kbd">→</span> tiếp</span><span><span class="kbd">←</span> lùi</span>
+      <span><span class="kbd">J</span> nhảy QĐ</span><span><span class="kbd">G</span> sửa đội</span><span><span class="kbd">L</span> bảng điểm</span>
+      <span><span class="kbd">R</span> đọc lại câu hỏi</span><span><span class="kbd">F</span> toàn màn hình</span><span><span class="kbd">S</span> tốc độ đọc</span><span><span class="kbd">V</span> giọng đọc</span><span><span class="kbd">M</span> âm thanh</span></span>
+  </div>`;
+}
+function nextLabel(sl){
+  if(sl.t==="round") return sl.step===0?`Câu hỏi QĐ ${pad(sl.i+1)}`:sl.step===1?(rs(sl.i).phase==="wait"?"🔊 Đọc câu hỏi":"Chốt đáp án"):(sl.i===ROUNDS.length-1?"Phiên họp cuối":"QĐ tiếp");
+  return {intro:"Vào Hồi 1",block:"Vào hồi",final:"Mời Anh Tú tổng kết",wrap:"The End",theend:"Xong"}[sl.t]||"Tiếp";
+}
+function paintPanel(inner,nav){
+  app.className="mcmode"; S.lastView="";
+  app.innerHTML=`${bar(`<button class="btn sm ghost" id="topledger">Bảng điểm</button><button class="btn sm ghost" id="jump">Mục lục ▾</button>`)}
+    <div class="layout"><main class="main">${inner}${nav||""}</main>${betPanel(null,null)}</div>`;
+  wireBar(); wireGroups(null,0);
+  const pv=document.getElementById("prev"), nx=document.getElementById("next");
+  if(pv) pv.onclick=()=>step1(-1); if(nx) nx.onclick=()=>step1(1);
+  app.__advance=()=>step1(1);
+}
+function step1(d){
+  const ni=S.i+d; if(ni<0||ni>=SL.length) return;
+  AU.hush(); AU.flip();
+  const prev=SL[S.i], nx=SL[ni];
+  if(nx.t==="round"&&nx.step===2&&prev.t==="round"&&prev.i===nx.i&&prev.step===1){
+    closeRound(nx.i); settleRound(nx.i);
+    setTimeout(()=>AU.cheer(4.5),150);                 /* nhạc hoan hô sau mỗi lần chốt đáp án */
+  }
+  S.i=ni; S.line=0;
+  if(nx.t==="round"&&nx.step===0&&!(prev.t==="round"&&prev.i===nx.i)) S.slate=true;
+  if(nx.t==="final"&&d>0) setTimeout(()=>AU.cheer(7),200);
+  if(nx.t==="theend"&&d>0) setTimeout(()=>AU.cheer(6),200);
+  stage(); window.scrollTo(0,0);
+}
+
+function introPanel(){
+  return `<div class="block">${gearSVG("deco gearA",14)}
+    <div class="actart">${icon("bank","big")}<div><p class="eyebrow">Mở đầu · 3 phút</p><h2 style="margin-top:6px">Cốt truyện &amp; luật chơi</h2></div></div>
+    <div class="castmini">${npcCard("giang")}</div>
+    <p class="stagedir">[Manchester, năm 1880. Cuộc cách mạng công nghiệp tạo ra một cuộc đua sản xuất sợi bông. Mỗi đội trong lớp vừa mở một nhà máy và được ngân hàng ứng 1.000 USD vốn trò chơi. Đội có nhiều vốn nhất sau bảy hồi giành danh hiệu ÔNG TRÙM CÔNG NGHIỆP.]</p>
+    <div class="finale"><p class="eyebrow">Lâm Thị Quỳnh Giang · HS194252</p>
+      <p style="font-size:19px">“Thưa các chủ nhà máy, tôi giao cho mỗi tập đoàn <b>1.000 USD</b>. Các vị sẽ tuyển người, mua nguyên liệu, chạy máy và cạnh tranh. Vốn có thể sinh sôi, nhưng một quyết định sai sẽ phải trả giá!”</p></div>
+    <p class="quiet">Mỗi đội tự đặt tên nhà máy và phân vai nội bộ: <b>CEO</b> (chốt phương án), <b>CFO</b> (tài chính), <b>HR Manager</b> (nhân sự), <b>Production Manager</b> (sản xuất), <b>Business Strategist</b> (chiến lược), <b>Workers’ Representative</b> (đại diện công nhân).</p>
+    ${flowHTML()}
+    <p class="quiet" style="font-size:14px">Các số 15, 121, 136 USD là số liệu minh họa trong giáo trình, <b>không</b> cộng/trừ vào vốn 1.000 USD. Đội sai vẫn tiếp tục hành trình.</p>
+    <div class="blockskyline">${skylineSVG()}</div></div>`;
+}
+function flowHTML(){
+  return `<div class="flow">
+    <div><b>📣 Biến cố</b><span>NPC thông báo tình huống của nhà máy.</span></div>
+    <div><b>01 · Kiến thức mới</b><span>Trình bày 30–60 giây.</span></div>
+    <div><b>02 · Câu hỏi</b><span>AI đọc câu hỏi → 30 giây tự quyết → Mật báo → 15 giây.</span></div>
+    <div><b>03 · Đáp án</b><span>Giải thích ngắn 15–25 giây, nhạc hoan hô, cộng/trừ vốn.</span></div>
+    <div><b>➜ Chuyển cảnh</b><span>NPC bàn giao hồ sơ cho NPC kế tiếp.</span></div>
+  </div>`;
+}
+
+function blockPanel(n){
+  const b=BLOCKS[n-1], qs=ROUNDS.map((r,i)=>i).filter(i=>ROUNDS[i].block===n).map(i=>pad(i+1));
+  return `<div class="block">${gearSVG("deco gearA",14)}
+    <div class="actart">${icon(ACTICON[n-1],"big")}
+      <div><p class="eyebrow">Hồi ${pad(b.n)} · QĐ ${qs.join(" – ")} · ${b.time}</p><h2 style="margin-top:6px">${b.name}</h2></div></div>
+    <p class="stagedir">[${b.scene}]</p>
+    <div class="castmini">${b.cast.map(k=>npcCard(k)).join("")}</div>
+    <div class="keybox"><p class="eyebrow">Mục tiêu</p><p><b>${b.goal}</b></p></div>
+    <div class="blockskyline">${skylineSVG()}</div></div>`;
+}
+
+function finalPanel(){
+  const st=standings(), champ=st[0], tie=st.length>1&&st[0].p===st[1].p;
+  return `<div class="block">${gearSVG("deco gearA",14)}
+    <div class="actart">${icon("crown","big")}<div><p class="eyebrow">Phiên họp cuối · Trao giải · 4 phút</p><h2 style="margin-top:6px">Ông trùm công nghiệp</h2></div></div>
+    <div class="castmini">${npcCard("giang")}</div>
+    <p class="stagedir">[Nhạc chiến thắng. Giang trở lại vị trí chủ ngân hàng, trên màn hình là bảng xếp hạng vốn.]</p>
+    <div class="finale"><p class="eyebrow">Lâm Thị Quỳnh Giang · HS194252</p>
+      <p>Thưa các nhà công nghiệp, bảy hồi đã đưa chúng ta đi từ công thức chung của tư bản, tuyển dụng, sản xuất đến kiểm toán và cạnh tranh! Trước khi công bố ngôi vương, tôi dành cho các đội một câu phân định:</p>
+      <p style="font-size:19px"><b>“Theo lý luận C. Mác, điều gì thật sự tạo ra giá trị thặng dư?”</b></p>
+      <p class="gmsg">[Các đội ghi đáp án trong 15 giây. Chỉ dùng câu này để phân định nếu có các đội bằng vốn; không cộng vốn như 15 câu chính.]${tie?` <b style="color:var(--crit)">Hiện đang có đội bằng vốn — cần dùng câu phân định.</b>`:""}</p></div>
+    ${champ?`<div class="champ"><span class="crown">${icon("crown","")}</span><div><p class="eyebrow">Ông trùm công nghiệp của Capital Quest</p><b>${esc(champ.g.name)}</b><span>${fmt(champ.p)} USD</span></div></div>`:""}
+    <ol class="rank big">${st.map((x,i)=>`<li class="${i===0?"top":""}"><span class="rk">${i+1}</span><span class="rn">${esc(x.g.name)}</span><span class="rv">${fmt(x.p)} USD</span></li>`).join("")}</ol>
+    <div class="finale"><p class="eyebrow">Lâm Thị Quỳnh Giang · HS194252 — Trao giải</p>
+      <p>Hội đồng Công nghiệp đã hoàn tất đối chiếu sổ vốn! Xin chúc mừng nhà máy có tổng vốn cao nhất giành danh hiệu <b>ÔNG TRÙM CÔNG NGHIỆP</b> của CAPITAL QUEST! Và bây giờ, mời chuyên gia <b>Trần Anh Tú</b> tổng kết toàn bộ hành trình.</p></div></div>`;
+}
+
+function wrapPanel(){
+  return `<div class="block">${gearSVG("deco gearA",14)}
+    <div class="actart">${icon("ledger","big")}<div><p class="eyebrow">Phần tóm tắt và kết luận cuối cùng</p><h2 style="margin-top:6px">Nguồn gốc · Bản chất · Phương pháp</h2></div></div>
+    <div class="castmini">${npcCard("tu")}</div>
+    <p class="quiet" style="font-size:16px">Sau hành trình vận hành đế chế sợi bông, chúng ta cần ghi nhớ ba điểm cốt lõi của lý luận C. Mác về giá trị thặng dư.</p>
+    <div class="three">
+      <div><span class="n">01</span><b>Về nguồn gốc</b><p>Tiền trở thành tư bản khi vận động theo T – H – T′ để tăng giá trị. Lưu thông không tự sinh ra giá trị thặng dư. Chính giá trị sử dụng đặc biệt của hàng hóa sức lao động cho phép lao động sống tạo ra giá trị mới lớn hơn giá trị sức lao động.</p></div>
+      <div><span class="n">02</span><b>Về bản chất</b><p>Giá trị thặng dư là bộ phận giá trị mới dôi ra ngoài giá trị sức lao động và thuộc về nhà tư bản. Tư liệu sản xuất chuyển giá trị cũ vào sản phẩm; trong lý luận này, lao động sống tạo ra giá trị mới v + m. Tỷ suất m′ nói lên mức độ khai thác sức lao động, còn khối lượng M cho thấy quy mô giá trị thặng dư.</p></div>
+      <div><span class="n">03</span><b>Về phương pháp</b><p>Giá trị thặng dư <b>tuyệt đối</b> gắn với việc kéo dài ngày lao động; <b>tương đối</b> gắn với rút ngắn thời gian lao động tất yếu; còn <b>siêu ngạch</b> gắn với năng suất lao động cá biệt cao hơn năng suất xã hội.</p></div>
+    </div>
+    <div class="lesson"><p class="eyebrow">Kết lại</p>
+      <b>Dù máy móc, vốn và chiến lược cạnh tranh liên tục thay đổi, theo C. Mác, nguồn gốc của giá trị thặng dư vẫn là phần giá trị mới do lao động sống tạo ra vượt quá giá trị hàng hóa sức lao động.</b>
+      <p>CAPITAL QUEST xin khép lại tại đây. Cảm ơn thầy cô và cả lớp!</p></div>
+    <details class="data"><summary>15 quyết định, 15 kiến thức</summary>
+      <div style="overflow-x:auto;margin-top:8px"><table class="sumtbl"><thead><tr><th>QĐ</th><th>Chủ đề</th><th>Một câu</th></tr></thead>
+        <tbody>${SUMMARY.map(r=>`<tr><td>${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td></tr>`).join("")}</tbody></table></div></details></div>`;
+}
+
+function endPanel(){
+  return `<div class="block theend">${gearSVG("deco gearA",14)}${gearSVG("deco gearB",9)}
+    <p class="eyebrow">Capital Quest · Chương 3 – Giá trị thặng dư trong nền kinh tế thị trường</p>
+    <h1>THE END</h1><h2>Đế Chế Sợi Bông</h2>
+    <div class="credits">${ORDER.map(k=>`<div><span class="mssv">${CAST[k].id}</span><b>${CAST[k].name}</b><span>${CAST[k].role}</span></div>`).join("")}</div>
+    <div class="blockskyline">${skylineSVG()}</div></div>`;
+}
+function openJump(){
+  const d=document.getElementById("dlg"), b=document.getElementById("dlgBody");
+  const go=(i,txt,n)=>`<button data-i="${i}"><span class="n">${n}</span><span>${txt}</span></button>`;
+  let h=`<h2>Nhảy tới</h2><div class="jump">${go(0,"Giới thiệu cốt truyện / luật / vai — Quỳnh Giang","—")}`;
+  BLOCKS.forEach(bl=>{
+    h+=`<p class="hd">Hồi ${bl.n} · ${bl.name}</p>`+go(SL.findIndex(s=>s.t==="block"&&s.b===bl.n),`Mở đầu Hồi ${bl.n}`,"—");
+    ROUNDS.forEach((r,i)=>{ if(r.block!==bl.n) return;
+      h+=go(SL.findIndex(s=>s.t==="round"&&s.i===i&&s.step===0),`${r.title} <span class="quiet">· ${CAST[r.npc].name} (${CAST[r.npc].id})</span>`,"QĐ"+pad(i+1)); });
+  });
+  h+=`<p class="hd">Kết</p>`+go(SL.findIndex(s=>s.t==="final"),"Trao giải — Quỳnh Giang","★")+go(SL.findIndex(s=>s.t==="wrap"),"Tổng kết — Anh Tú","—")+go(SL.length-1,"The End","—");
+  h+=`</div><button class="btn" id="dclose">Đóng</button>`;
+  b.innerHTML=h; d.showModal();
+  b.querySelectorAll(".jump button").forEach(x=>x.onclick=()=>{ AU.hush(); S.i=+x.dataset.i; S.line=0; S.slate=true; d.close(); stage(); window.scrollTo(0,0); });
+  document.getElementById("dclose").onclick=()=>d.close();
+}
+
+document.addEventListener("keydown",e=>{
+  if(!S.started) return;
+  const d=document.getElementById("dlg"); if(d&&d.open) return;
+  if(/^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName||"")) return;
+  const k=e.key.toLowerCase();
+  if(e.key==="ArrowRight"||e.key===" "||e.key==="PageDown"){ e.preventDefault(); app.__advance?app.__advance():step1(1); }
+  else if(e.key==="ArrowLeft"||e.key==="PageUp"){ e.preventDefault(); step1(-1); }
+  else if(k==="j") openJump(); else if(k==="l") openLedger(); else if(k==="g") openGroups();
+  else if(k==="b") scrollToBet();
+  else if(k==="r"){ const ri=curRound(); if(ri>=0){ if(rs(ri).phase==="wait") app.__advance(); else AU.speak(questionText(ri),()=>{}); } }
+  else if(k==="s"){ cycleRate(); }
+  else if(k==="v"){ AU.voice=!AU.voice; save(); if(!AU.voice) AU.hush(); stage(); }
+  else if(k==="m"){ AU.sfx=!AU.sfx; save(); if(AU.sfx){AU.boot();AU.chip()} else AU.stopCheer(); stage(); }
+  else if(k==="f"){ if(!document.fullscreenElement) document.documentElement.requestFullscreen?.().catch(()=>{}); else document.exitFullscreen?.(); }
+});
+window.addEventListener("beforeunload",()=>AU.hush());
+render();
+
+</script>
+</body>
+</html>
